@@ -37,8 +37,8 @@ a { text-decoration: none; color: inherit; transition: 0.3s; }
 
 /* 2. Aumentamos el tamaño del logo */
 .nav-logo {
-    width: 70px;           /* PRUEBA CON 70px, 80px o 100px */
-    height: 70px;          /* Mantén siempre el mismo valor que arriba */
+    width: 100px !important;           /* PRUEBA CON 70px, 80px o 100px */
+    height: 100px !important;          /* Mantén siempre el mismo valor que arriba */
     border-radius: 50%;
     object-fit: cover;
     border: 2px solid white;
@@ -155,6 +155,7 @@ footer { background-color: #000000; color: #fff; padding: 3rem 0; text-align: ce
 .page-btn { padding: 8px 16px; background-color: white; border: 1px solid #ddd; cursor: pointer; font-weight: bold; transition: all 0.3s ease; border-radius: 4px; }
 .page-btn:hover { background-color: #eee; }
 .page-btn.active { background-color: #ff0000; color: white; border-color: #ff0000; }
+
 
 
 
