@@ -25,23 +25,23 @@ document.addEventListener('DOMContentLoaded', () => {
         const sheetURL = contenedor.getAttribute('data-sheet');
         
         // Detectamos qué tipo de filtro estamos usando
-        const editorialFiltro = contenedor.getAttribute('data-editorial');
+        const medioFiltro = contenedor.getAttribute('data-medio');
         const modalidadFiltro = contenedor.getAttribute('data-modalidad');
         
         // Ponemos el título automáticamente
         const tituloPagina = document.getElementById('titulo-pagina');
         if (tituloPagina) {
-            if (editorialFiltro) tituloPagina.innerText = "Noticias de " + editorialFiltro;
+            if (medioFiltro) tituloPagina.innerText = "Noticias de " + medioFiltro;
             if (modalidadFiltro) tituloPagina.innerText = "Noticias de " + modalidadFiltro;
         }
 
         if (sheetURL) {
-            cargarNoticias(sheetURL, editorialFiltro, modalidadFiltro, contenedor);
+            cargarNoticias(sheetURL, medioFiltro, modalidadFiltro, contenedor);
         }
     }
 });
 
-async function cargarNoticias(url, filtroEditorial, filtroModalidad, contenedor) {
+async function cargarNoticias(url, filtroMedio, filtroModalidad, contenedor) {
     try {
         const respuesta = await fetch(url);
         const texto = await respuesta.text();
@@ -57,16 +57,16 @@ async function cargarNoticias(url, filtroEditorial, filtroModalidad, contenedor)
             const col = filaRaw.split(regex).map(val => val.replace(/^"|"$/g, '').trim());
 
             // IMPORTANTE: Asegúrate de que tu Excel tiene 6 columnas
-            // 0:Fecha, 1:Link, 2:Titulo, 3:Foto, 4:Editorial, 5:Modalidad
+            // 0:Fecha, 1:Link, 2:Titulo, 3:Foto, 4:Medio, 5:Modalidad
             if (col.length < 6) return; 
 
-            const [fecha, link, titulo, foto, editorial, modalidad] = col;
+            const [fecha, link, titulo, foto, medio, modalidad] = col;
 
             // LÓGICA DE FILTRADO
             let mostrar = false;
 
-            // 1. Si la página pide Editorial, comprobamos la columna 4 (editorial)
-            if (filtroEditorial && editorial && editorial.toUpperCase() === filtroEditorial.toUpperCase()) {
+            // 1. Si la página pide Medio, comprobamos la columna 4 (medio)
+            if (filtroMedio && medio && medio.toUpperCase() === filtroMedio.toUpperCase()) {
                 mostrar = true;
             }
 
@@ -82,7 +82,7 @@ async function cargarNoticias(url, filtroEditorial, filtroModalidad, contenedor)
                         <div class="contenido-tarjeta-dinamica">
                             <span class="fecha-tarjeta">${fecha}</span>
                             <h3 class="titulo-tarjeta">${titulo}</h3>
-                            <small style="color:#ddd; font-size:0.7rem; display:block; margin-top:5px;">${editorial}</small>
+                            <small style="color:#ddd; font-size:0.7rem; display:block; margin-top:5px;">${medio}</small>
                         </div>
                     </a>
                 `;
