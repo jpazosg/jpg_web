@@ -201,14 +201,6 @@ a { text-decoration: none; color: inherit; transition: 0.3s; }
     filter: brightness(1.1);
 }
 
-/* IMÁGENES ESPECÍFICAS */
-.tem-f1 { background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('f1.jpg'); }
-.tem-motogp { background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('motogp.jpg'); }
-.tem-coches { background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('coches.jpg'); }
-.tem-futbol { background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('futbol.jpg'); }
-.tem-padel { background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('padel.jpg'); }
-.tem-papel { background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('papel.jpg'); }
-
 /* --- 5. SOBRE MÍ --- */
 .about-section {
     padding: 4rem 20px;
@@ -483,3 +475,4 @@ footer {
     .gallery-container { column-count: 1; } /* 1 columna en móvil */
 
 }
+
