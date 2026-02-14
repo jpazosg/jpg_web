@@ -18,17 +18,20 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- 2. CARGA DE NOTICIAS (DINÁMICO) ---
+    // --- 2. SISTEMA DE NOTICIAS ---
     const contenedor = document.getElementById('contenedor-dinamico');
+    const selectSort = document.getElementById('sort-select');
+    const paginationContainer = document.getElementById('pagination');
+
+    let allNews = [];       // Todas las noticias tal cual vienen del CSV
+    let currentPage = 1;    // Página actual
+    const itemsPerPage = 10; // Límite de noticias por página
 
     if (contenedor) {
         const sheetURL = contenedor.getAttribute('data-sheet');
-        
-        // Detectamos qué tipo de filtro estamos usando
         const medioFiltro = contenedor.getAttribute('data-medio');
         const modalidadFiltro = contenedor.getAttribute('data-modalidad');
         
-        // Ponemos el título automáticamente
         const tituloPagina = document.getElementById('titulo-pagina');
         if (tituloPagina) {
             if (medioFiltro) tituloPagina.innerText = "Noticias de " + medioFiltro;
@@ -36,66 +39,150 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (sheetURL) {
-            cargarNoticias(sheetURL, medioFiltro, modalidadFiltro, contenedor);
+            iniciarAppNoticias(sheetURL, medioFiltro, modalidadFiltro);
         }
     }
-});
 
-async function cargarNoticias(url, filtroMedio, filtroModalidad, contenedor) {
-    try {
-        const respuesta = await fetch(url);
-        const texto = await respuesta.text();
+    async function iniciarAppNoticias(url, filtroMedio, filtroModalidad) {
+        try {
+            const respuesta = await fetch(url);
+            const texto = await respuesta.text();
+            
+            // Procesamos y guardamos el orden ORIGINAL del CSV
+            allNews = procesarCSV(texto, filtroMedio, filtroModalidad);
+
+            if (selectSort) {
+                selectSort.addEventListener('change', () => {
+                    currentPage = 1; 
+                    renderizarApp();
+                });
+            }
+
+            // Renderizamos tal cual (orden 'default')
+            renderizarApp();
+
+        } catch (error) {
+            console.error("Error:", error);
+            contenedor.innerHTML = "<p>Error cargando noticias.</p>";
+        }
+    }
+
+    function renderizarApp() {
+        // Obtenemos el criterio. Si no hay select, es 'default'
+        const orden = selectSort ? selectSort.value : 'default';
         
-        // Separar filas
-        const filas = texto.split("\n").slice(1); 
+        // IMPORTANTE: Hacemos una copia ([...allNews]) para no alterar el array original
+        // Así si volvemos a 'default', recuperamos el orden del CSV
+        let listaParaMostrar = [...allNews];
 
+        // Solo ordenamos si NO es el orden por defecto
+        if (orden !== 'default') {
+            ordenarNoticias(listaParaMostrar, orden);
+        }
+
+        // Paginación
+        const totalPages = Math.ceil(listaParaMostrar.length / itemsPerPage);
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        
+        const noticiasPagina = listaParaMostrar.slice(startIndex, endIndex);
+
+        pintarNoticias(noticiasPagina);
+        pintarPaginacion(totalPages);
+    }
+
+    function pintarNoticias(noticias) {
         contenedor.innerHTML = ''; 
 
+        if (noticias.length === 0) {
+            contenedor.innerHTML = '<p style="text-align:center; width:100%;">No hay noticias disponibles.</p>';
+            return;
+        }
+
+        noticias.forEach(item => {
+            const tarjeta = `
+                <a href="${item.link}" target="_blank" class="tarjeta tarjeta-dinamica" style="background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('${item.foto}');">
+                    <div class="contenido-tarjeta-dinamica">
+                        <span class="fecha-tarjeta">${item.fechaOriginal}</span>
+                        <h3 class="titulo-tarjeta">${item.titulo}</h3>
+                        <small style="color:#ddd; font-size:0.7rem; display:block; margin-top:5px;">${item.medio}</small>
+                    </div>
+                </a>
+            `;
+            contenedor.innerHTML += tarjeta;
+        });
+    }
+
+    function pintarPaginacion(total) {
+        if (!paginationContainer) return;
+        paginationContainer.innerHTML = '';
+
+        if (total <= 1) return; 
+
+        for (let i = 1; i <= total; i++) {
+            const btn = document.createElement('button');
+            btn.innerText = i;
+            btn.classList.add('page-btn');
+            if (i === currentPage) btn.classList.add('active');
+
+            btn.addEventListener('click', () => {
+                currentPage = i;
+                renderizarApp();
+                const headerTitle = document.getElementById('titulo-pagina');
+                if (headerTitle) headerTitle.scrollIntoView({ behavior: 'smooth' });
+            });
+
+            paginationContainer.appendChild(btn);
+        }
+    }
+
+    function ordenarNoticias(lista, criterio) {
+        lista.sort((a, b) => {
+            if (criterio === 'date-desc') return b.fechaObjeto - a.fechaObjeto;
+            if (criterio === 'date-asc') return a.fechaObjeto - b.fechaObjeto;
+            if (criterio === 'title-asc') return a.titulo.localeCompare(b.titulo);
+            if (criterio === 'title-desc') return b.titulo.localeCompare(a.titulo);
+            return 0;
+        });
+    }
+
+    function procesarCSV(texto, filtroMedio, filtroModalidad) {
+        const filas = texto.split("\n").slice(1);
+        const datosLimpios = [];
+
         filas.forEach(filaRaw => {
-            // Regex para respetar comas dentro de comillas
             const regex = /,(?=(?:(?:[^"]*"){2})*[^"]*$)/;
             const col = filaRaw.split(regex).map(val => val.replace(/^"|"$/g, '').trim());
 
-            // IMPORTANTE: Asegúrate de que tu Excel tiene 6 columnas
-            // 0:Fecha, 1:Link, 2:Titulo, 3:Foto, 4:Medio, 5:Modalidad
-            if (col.length < 6) return; 
+            if (col.length < 6) return;
 
             const [fecha, link, titulo, foto, medio, modalidad] = col;
 
-            // LÓGICA DE FILTRADO
             let mostrar = false;
-
-            // 1. Si la página pide Medio, comprobamos la columna 4 (medio)
-            if (filtroMedio && medio && medio.toUpperCase() === filtroMedio.toUpperCase()) {
-                mostrar = true;
-            }
-
-            // 2. Si la página pide Modalidad, comprobamos la columna 5 (modalidad)
-            // Usamos 'includes' por si en el excel pusiste "F1 " con un espacio sin querer
-            if (filtroModalidad && modalidad && modalidad.toUpperCase().includes(filtroModalidad.toUpperCase())) {
-                mostrar = true;
-            }
+            if (filtroMedio && medio && medio.toUpperCase() === filtroMedio.toUpperCase()) mostrar = true;
+            if (filtroModalidad && modalidad && modalidad.toUpperCase().includes(filtroModalidad.toUpperCase())) mostrar = true;
 
             if (mostrar) {
-                const tarjeta = `
-                    <a href="${link}" target="_blank" class="tarjeta tarjeta-dinamica" style="background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('${foto}');">
-                        <div class="contenido-tarjeta-dinamica">
-                            <span class="fecha-tarjeta">${fecha}</span>
-                            <h3 class="titulo-tarjeta">${titulo}</h3>
-                            <small style="color:#ddd; font-size:0.7rem; display:block; margin-top:5px;">${medio}</small>
-                        </div>
-                    </a>
-                `;
-                contenedor.innerHTML += tarjeta;
+                datosLimpios.push({
+                    fechaOriginal: fecha,
+                    fechaObjeto: convertirFecha(fecha),
+                    link,
+                    titulo,
+                    foto,
+                    medio,
+                    modalidad
+                });
             }
         });
-
-        if (contenedor.innerHTML === '') {
-            contenedor.innerHTML = '<p style="text-align:center; width:100%;">No hay noticias disponibles con este filtro.</p>';
-        }
-
-    } catch (error) {
-        console.error("Error:", error);
-        contenedor.innerHTML = "<p>Error cargando noticias.</p>";
+        return datosLimpios;
     }
-}
+
+    function convertirFecha(fechaStr) {
+        if (!fechaStr) return new Date(0);
+        const partes = fechaStr.split('/'); 
+        if (partes.length === 3) {
+            return new Date(partes[2], partes[1] - 1, partes[0]);
+        }
+        return new Date(0); 
+    }
+});
