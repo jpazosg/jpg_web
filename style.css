@@ -27,6 +27,17 @@ a { text-decoration: none; color: inherit; transition: 0.3s; }
 .nav-center { text-align: left; }
 .nav-title { font-weight: bold; font-size: 1.5rem; letter-spacing: 2px; }
 
+/* --- NUEVO: ESTILO PARA EL LOGO REDONDO --- */
+.nav-logo { 
+    width: 40px; 
+    height: 40px; 
+    border-radius: 50%; 
+    object-fit: cover; 
+    vertical-align: middle; 
+    margin-right: 10px; 
+    border: 2px solid white; 
+}
+
 /* --- 3. SECCIONES EDITORIALES --- */
 .editorial-section { max-width: 1200px; margin: 3rem auto; padding: 0 20px; }
 .editorial-header { display: flex; align-items: center; gap: 15px; margin-bottom: 2rem; }
