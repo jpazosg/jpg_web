@@ -146,7 +146,7 @@ a { text-decoration: none; color: inherit; transition: 0.3s; }
 
 .separator { width: 80%; margin: 2rem auto; border: 0; border-top: 1px solid #ddd; }
 
-/* --- 4. TEMÁTICAS (ACTUALIZADO PARA IMÁGENES HTML) --- */
+/* --- 4. TEMÁTICAS --- */
 .tematicas-container {
     padding: 4rem 20px;
     background-color: #f4f4f4;
@@ -171,64 +171,40 @@ a { text-decoration: none; color: inherit; transition: 0.3s; }
 }
 
 .tarjeta {
-    position: relative; /* Necesario para colocar cosas encima */
+    background-color: #333;
+    border: 1px solid #ddd;
     height: 150px;
     display: flex;
     align-items: center;
     justify-content: center;
     text-decoration: none;
-    border-radius: 4px;
-    overflow: hidden;   /* IMPORTANTE: Lo que salga de la tarjeta se recorta */
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    background-color: #333;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    
+    /* AQUÍ ESTÁ EL TRUCO: */
+    /* Usamos la variable --foto que viene del HTML + el gradiente oscuro */
+    background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), var(--foto);
+    
+    background-size: cover;
+    background-position: center;
+    position: relative;
 }
 
-/* ESTILO DE LA IMAGEN DENTRO DE LA TARJETA */
-.tarjeta img {
-    position: absolute; /* La sacamos del flujo normal */
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* MÁGICO: Hace que la img rellene todo sin deformarse */
-    z-index: 1;        /* Nivel 1 (al fondo) */
-    transition: transform 0.5s ease; /* Animación suave del zoom */
-}
-
-/* EL FILTRO OSCURO (Overlay) */
-.tarjeta::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.4); /* Color negro al 40% de opacidad */
-    z-index: 2; /* Nivel 2 (encima de la foto) */
-    transition: background-color 0.3s ease;
-}
-
-/* EL TEXTO */
 .texto-tarjeta {
-    position: relative; /* Para que el z-index funcione */
-    z-index: 3;         /* Nivel 3 (encima de todo) */
     font-size: 1.5rem;
     font-weight: 800;
     text-transform: uppercase;
     color: #ffffff;
     letter-spacing: 1px;
+    z-index: 2;
     text-shadow: 0 2px 4px rgba(0,0,0,0.8);
 }
 
-/* EFECTOS AL PASAR EL RATÓN (HOVER) */
-.tarjeta:hover img {
-    transform: scale(1.1); /* La foto hace zoom */
+.tarjeta:hover {
+    transform: scale(1.02);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    filter: brightness(1.1);
 }
-
-.tarjeta:hover::after {
-    background-color: rgba(0,0,0,0.2); /* El filtro se aclara un poco */
-}
-
 /* --- 5. SOBRE MÍ --- */
 .about-section {
     padding: 4rem 20px;
@@ -502,3 +478,4 @@ footer {
 @media (max-width: 600px) {
     .gallery-container { column-count: 1; } /* 1 columna en móvil */
 }
+
