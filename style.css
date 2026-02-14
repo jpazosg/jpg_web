@@ -25,19 +25,25 @@ a { text-decoration: none; color: inherit; transition: 0.3s; }
 /* --- 2. BARRA DE NAVEGACIÓN --- */
 .navbar { display: flex; justify-content: space-between; align-items: center; background-color: #ff0000; color: white; padding: 1rem 5%; position: sticky; top: 0; z-index: 1000; }
 .nav-center { text-align: left; }
-.nav-title { font-weight: bold; font-size: 1.5rem; letter-spacing: 2px; }
-
-/* --- NUEVO: ESTILO PARA EL LOGO REDONDO --- */
-.nav-logo { 
-    width: 100px; 
-    height: 100px; 
-    border-radius: 50%; 
-    object-fit: cover; 
-    vertical-align: middle; 
-    margin-right: 10px; 
-    border: 2px solid white; 
+/* 1. Añadimos Flexbox al título para que el texto se centre verticalmente con el logo */
+.nav-title {
+    font-weight: bold;
+    font-size: 1.5rem;
+    letter-spacing: 2px;
+    display: flex;          /* NUEVO: Activa flexbox */
+    align-items: center;    /* NUEVO: Centra el texto verticalmente */
+    gap: 15px;              /* NUEVO: Espacio entre el logo y la palabra */
 }
 
+/* 2. Aumentamos el tamaño del logo */
+.nav-logo {
+    width: 70px;           /* PRUEBA CON 70px, 80px o 100px */
+    height: 70px;          /* Mantén siempre el mismo valor que arriba */
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid white;
+    /* Ya no hace falta margin-right porque usamos 'gap' arriba */
+}
 /* --- 3. SECCIONES EDITORIALES --- */
 .editorial-section { max-width: 1200px; margin: 3rem auto; padding: 0 20px; }
 .editorial-header { display: flex; align-items: center; gap: 15px; margin-bottom: 2rem; }
@@ -149,5 +155,6 @@ footer { background-color: #000000; color: #fff; padding: 3rem 0; text-align: ce
 .page-btn { padding: 8px 16px; background-color: white; border: 1px solid #ddd; cursor: pointer; font-weight: bold; transition: all 0.3s ease; border-radius: 4px; }
 .page-btn:hover { background-color: #eee; }
 .page-btn.active { background-color: #ff0000; color: white; border-color: #ff0000; }
+
 
 
