@@ -1,0 +1,484 @@
+/* --- RESET BÁSICO --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* --- NUEVO: CORRECCIÓN PARA QUE LA BARRA NO TAPE LOS TÍTULOS --- */
+html {
+    scroll-behavior: smooth; /* Desplazamiento suave */
+}
+
+section, footer {
+    /* Esto crea un margen invisible de 100px por encima de cada sección
+       al hacer clic en el enlace, compensando la altura de la barra fija */
+    scroll-margin-top: 100px; 
+}
+
+body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: #333;
+    line-height: 1.6;
+    background-color: #f9f9f9;
+}
+
+a { text-decoration: none; color: inherit; transition: 0.3s; }
+
+/* --- 1. HEADER (4 FOTOS) --- */
+.top-header {
+    position: relative;
+    width: 100%;
+    height: 350px;
+    overflow: hidden;
+}
+
+.header-images {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+.header-images img {
+    width: 25%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.7);
+}
+
+.header-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: white;
+    z-index: 10;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+}
+
+.header-overlay h1 { font-size: 3rem; text-transform: uppercase; letter-spacing: 2px; }
+.header-overlay p { font-size: 1.2rem; margin-top: 10px; }
+
+/* --- 2. BARRA DE NAVEGACIÓN --- */
+.navbar {
+    display: flex;
+    justify-content: space-between; /* Esto mandará el INICIO a la izq y el MENÚ a la derecha */
+    align-items: center;
+    background-color: #ff0000;
+    color: white;
+    padding: 1rem 5%;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.nav-center {
+    /* Quitamos márgenes raros, dejamos que flexbox haga su trabajo */
+    text-align: left;
+}
+
+.nav-title {
+    font-weight: bold;
+    font-size: 1.5rem;
+    letter-spacing: 2px;
+}
+
+/* --- 3. SECCIONES EDITORIALES --- */
+.editorial-section {
+    max-width: 1200px;
+    margin: 3rem auto;
+    padding: 0 20px;
+}
+
+.editorial-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 2rem;
+}
+
+.editorial-header h2 {
+    font-size: 2rem;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+}
+
+.editorial-logo {
+    height: 40px;
+    width: auto;
+    margin-right: 15px;
+}
+
+.ver-mas-btn {
+    font-weight: bold;
+    color: #666;
+    font-size: 0.9rem;
+}
+.ver-mas-btn:hover { color: #000; text-decoration: underline; }
+
+.news-circle-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+
+.news-item {
+    text-align: center;
+    width: 200px;
+}
+
+.news-item img {
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    transition: transform 0.3s;
+}
+
+.news-item:hover img { transform: scale(1.05); }
+
+.news-item p { font-weight: 500; font-size: 0.95rem; }
+
+.separator { width: 80%; margin: 2rem auto; border: 0; border-top: 1px solid #ddd; }
+
+/* --- 4. TEMÁTICAS --- */
+.tematicas-container {
+    padding: 4rem 20px;
+    background-color: #f4f4f4;
+    text-align: center;
+}
+
+.titulo-tematicas {
+    font-size: 2rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 3rem;
+    color: #111;
+    font-weight: 700;
+}
+
+.grid-tarjetas {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.tarjeta {
+    background-color: #333;
+    border: 1px solid #ddd;
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+.texto-tarjeta {
+    font-size: 1.5rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: #ffffff;
+    letter-spacing: 1px;
+    z-index: 2;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+}
+
+.tarjeta:hover {
+    transform: scale(1.02);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    filter: brightness(1.1);
+}
+
+/* IMÁGENES ESPECÍFICAS */
+.tem-f1 { background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('img/f1.jpg'); }
+.tem-motogp { background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('img/motogp.jpg'); }
+.tem-coches { background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('img/coches.jpg'); }
+.tem-futbol { background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('img/futbol.jpg'); }
+.tem-padel { background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('img/padel.jpg'); }
+.tem-papel { background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('img/papel.jpg'); }
+
+/* --- 5. SOBRE MÍ --- */
+.about-section {
+    padding: 4rem 20px;
+    background-color: white;
+}
+
+.about-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 50px;
+}
+
+.about-text { flex: 1; }
+.about-text h2 { font-size: 2.5rem; margin-bottom: 1.5rem; }
+.about-image { flex: 1; }
+.about-image img { width: 100%; border-radius: 5px; box-shadow: 10px 10px 0 #000; }
+
+/* --- 6. FOOTER --- */
+footer {
+    background-color: #000000;
+    color: #fff;
+    padding: 3rem 0;
+    text-align: center;
+}
+
+.footer-content h3 { margin-bottom: 1.5rem; letter-spacing: 2px; }
+
+.footer-email {
+    display: block;
+    font-size: 1.5rem;
+    color: #ffffff;
+    text-decoration: none;
+    margin-bottom: 2rem;
+    font-weight: 300;
+    transition: color 0.3s ease;
+}
+.footer-email:hover { color: #f1c40f; text-decoration: underline; }
+
+.footer-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 1.5rem;
+}
+
+.footer-item { display: flex; align-items: center; gap: 8px; font-weight: bold; }
+.footer-item:hover { color: #f1c40f; }
+
+.divider { color: #555; }
+.copyright { font-size: 0.8rem; color: #777; }
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .header-images img { width: 50%; height: 50%; }
+    .header-images { flex-wrap: wrap; }
+    .nav-center { margin-left: 0; }
+    .navbar { flex-direction: row; } /* Mantenemos fila para que el menú siga a la derecha */
+    .grid-tarjetas { grid-template-columns: repeat(2, 1fr); }
+    .about-container { flex-direction: column; }
+    .news-circle-container { flex-direction: column; align-items: center; }
+}
+
+@media (max-width: 480px) {
+    .grid-tarjetas { grid-template-columns: 1fr; }
+}
+
+/* --- ESTILOS DEL MENÚ HAMBURGUESA (DERECHA) --- */
+
+.menu-toggle {
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    gap: 5px;
+    z-index: 1001;
+    margin-left: 20px;
+}
+
+.menu-toggle .bar {
+    width: 25px;
+    height: 3px;
+    background-color: white;
+    border-radius: 3px;
+    transition: all 0.3s ease;
+}
+
+/* El menú desplegable */
+.nav-dropdown {
+    position: absolute;
+    top: 100%;
+    left: auto; 
+    right: 0; /* Alineado a la derecha */
+    background-color: #000;
+    width: 250px;
+    list-style: none;
+    padding: 10px 0;
+    display: none;
+    flex-direction: column;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.5);
+}
+
+.nav-dropdown li { width: 100%; }
+
+.nav-dropdown li a {
+    display: block;
+    color: white;
+    padding: 15px 20px;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    border-bottom: 1px solid #333;
+    text-align: right; /* Texto alineado a la derecha */
+}
+
+.nav-dropdown li a:hover {
+    background-color: #333;
+    color: #f1c40f;
+}
+
+/* Clase activa */
+.nav-dropdown.active { display: flex; }
+
+/* Animación rayas */
+.menu-toggle.active .bar:nth-child(2) { opacity: 0; }
+.menu-toggle.active .bar:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+.menu-toggle.active .bar:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+/* --- ESTILOS PARA TARJETAS DINÁMICAS (GOOGLE SHEETS) --- */
+
+/* Ajustes específicos para cuando hay texto largo y fecha */
+.tarjeta-dinamica {
+    align-items: flex-end; /* Texto abajo en lugar de centrado */
+    justify-content: flex-start;
+    padding: 20px;
+    text-align: left;
+}
+
+.contenido-tarjeta-dinamica {
+    width: 100%;
+    z-index: 2;
+}
+
+.fecha-tarjeta {
+    display: inline-block;
+    background-color: #f1c40f; /* Color amarillo */
+    color: #000;
+    font-size: 0.8rem;
+    font-weight: bold;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}
+
+.titulo-tarjeta {
+    font-size: 1.1rem; /* Un poco más pequeño que las categorías para que quepa */
+    color: white;
+    line-height: 1.3;
+    font-weight: 700;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.9);
+    margin: 0;
+}
+
+/* Hover: subir un poco el texto */
+.tarjeta-dinamica:hover .contenido-tarjeta-dinamica {
+    transform: translateY(-5px);
+    transition: transform 0.3s ease;
+}
+
+/* --- ESTILOS GALERÍA MASONRY (EN PAPEL) --- */
+
+.gallery-container {
+    max-width: 1200px;
+    margin: 3rem auto;
+    padding: 0 20px;
+    /* EL TRUCO MÁGICO: Columnas estilo periódico */
+    column-count: 3; 
+    column-gap: 20px;
+}
+
+.gallery-item {
+    /* Evita que una foto se parta entre dos columnas */
+    break-inside: avoid; 
+    margin-bottom: 20px; /* Espacio abajo de cada foto */
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+    background-color: #fff;
+}
+
+.gallery-item img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Efecto Hover: La imagen crece un poquito */
+.gallery-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+/* Capa oscura con texto (Overlay) */
+.gallery-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+    opacity: 0; /* Invisible por defecto */
+    transition: opacity 0.3s ease;
+    display: flex;
+    align-items: flex-end; /* Texto abajo */
+    padding: 20px;
+}
+
+.gallery-item:hover .gallery-overlay {
+    opacity: 1; /* Visible al pasar ratón */
+}
+
+.gallery-text h3 {
+    color: #f1c40f; /* Amarillo */
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+}
+
+.gallery-text p {
+    color: white;
+    font-size: 0.9rem;
+    font-weight: 300;
+}
+
+/* --- ESTILO ESPECIAL PARA CITAS/TEXTO --- */
+.quote-item {
+    background-color: #f1c40f; /* Fondo amarillo tipo post-it o destacado */
+    padding: 30px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+}
+
+.quote-item blockquote {
+    font-family: 'Times New Roman', serif; /* Fuente periodística */
+    font-size: 1.5rem;
+    font-style: italic;
+    color: #111;
+    margin-bottom: 15px;
+    line-height: 1.4;
+}
+
+.quote-item cite {
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+    .gallery-container { column-count: 2; } /* 2 columnas en tablets */
+}
+
+@media (max-width: 600px) {
+    .gallery-container { column-count: 1; } /* 1 columna en móvil */
+}

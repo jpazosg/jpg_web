@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portafolio Periodístico</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-center">
+            <a href="#" class="nav-title">INICIO</a>
+        </div>
+
+        <div class="menu-toggle" id="mobile-menu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+
+        <ul class="nav-dropdown" id="nav-dropdown">
+            <li><a href="#ed1">Marca</a></li>
+            <li><a href="#ed2">AutoBuild</a></li>
+            <li><a href="#ed3">Guía de Marca</a></li>
+            <li><a href="#tematicas">Noticias por temática</a></li>
+            <li><a href="#sobre-mi">Sobre mí</a></li>
+            <li><a href="#contacto">Contacto</a></li>
+        </ul>
+    </nav>
+
+    <header class="top-header">
+        <div class="header-images">
+            <img src="img/Foto_inicio_1.jpeg" alt="Foto 1">
+            <img src="img/Foto_inicio_2.jpeg" alt="Foto 2">
+            <img src="img/Foto_inicio_3.jpeg" alt="Foto 3">
+            <img src="img/Foto_inicio_4.jpeg" alt="Foto 4">
+        </div>
+        <div class="header-overlay">
+            <h1>Javier Pazos Gurich</h1>
+            <p>Periodista Deportivo</p>
+        </div>
+    </header>
+
+    <section class="editorial-section" id="ed1">
+        <div class="editorial-header">
+            <h2><img src="img/marca.png" alt="Logo" class="editorial-logo">
+                MARCA</h2>
+            <a href="marca.html" class="ver-mas-btn">Ver más <i class="fas fa-arrow-right"></i></a>
+        </div>
+        <div class="news-circle-container">
+            <div class="news-item">
+                <img src="https://objetos-xlk.estaticos-marca.com/files/article_1320_widen_webp/uploads/2024/11/18/17280550851137.webp" alt="Noticia 1">
+                <p>El otro Mundial que se juega en redes</p>
+            </div>
+            <div class="news-item">
+                <img src="https://objetos-xlk.estaticos-marca.com/files/article_1320_widen_webp/uploads/2024/10/16/670febb8746c4.webp" alt="Noticia 2">
+                <p>Bea González está de vuelta para el Mundial: "Del 0 al 100 estoy al 95%"</p>
+            </div>
+            <div class="news-item">
+                <img src="https://objetos-xlk.estaticos-marca.com/files/article_1320_widen_webp/uploads/2024/11/18/17275139611081.webp" alt="Noticia 3">
+                <p>Se apagó la sonrisa de la Fórmula 1</p>
+            </div>
+        </div>
+    </section>
+
+    <hr class="separator">
+
+    <section class="editorial-section" id="ed2">
+        <div class="editorial-header">
+            <h2><img src="img/Logo_AutoBild.svg" alt="Logo" class="editorial-logo">
+                AUTOBUILD</h2>
+            <a href="https://www.autobild.es/autor/javier-pazos/" target="_blank" class="ver-mas-btn">Ver más <i class="fas fa-arrow-right"></i></a>
+        </div>
+        <div class="news-circle-container">
+            <div class="news-item">
+                <img src="https://imagenes.autobild.es/files/image_990_556/uploads/imagenes/2025/10/21/68f7419fb775e.png" alt="Noticia 4">
+                <p>Me he subido al Polestar 5: “El nuevo buque insignia de la marca sueca que será una gran amenaza para el Porsche Taycan”</p>
+            </div>
+            <div class="news-item">
+                <img src="https://imagenes.autobild.es/files/image_990_556/uploads/imagenes/2026/02/09/698a390a5a6bb8-29285437.jpeg" alt="Noticia 5">
+                <p>Aston Martin enseña al mundo el AMR26, el coche con el que Newey quiere volver a convertir a Fernando Alonso en campeón del mundo de Fórmula 1</p>
+            </div>
+            <div class="news-item">
+                <img src="https://imagenes.autobild.es/files/image_990_556/uploads/imagenes/2025/06/29/68d4fb48adde3.jpeg" alt="Noticia 6">
+                <p>Resumen del GP de Austria de Fórmula 1: Lando Norris gana en casa de Red Bull, Alonso es séptimo y Sainz abandona antes de empezar</p>
+            </div>
+        </div>
+    </section>
+
+    <hr class="separator">
+
+    <section class="editorial-section" id="ed3">
+        <div class="editorial-header">
+            <h2><img src="img/marca.png" alt="Logo" class="editorial-logo">
+                GUÍA MARCA</h2>
+            <a href="guia_marca.html" class="ver-mas-btn">Ver más <i class="fas fa-arrow-right"></i></a>
+        </div>
+        <div class="news-circle-container">
+            <div class="news-item">
+                <img src="img/Guia_marca.jpeg" alt="Noticia 7">
+                <p>Muy contento de participar en la creación de la guía de Marca 25/26.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="tematicas-container" id="tematicas">
+        <h2 class="titulo-tematicas">NOTICIAS DE DISTINTAS TEMÁTICAS</h2>
+        
+        <div class="grid-tarjetas">
+            <a href="f1.html" class="tarjeta tem-f1">
+                <span class="texto-tarjeta">F1</span>
+            </a>
+            
+            <a href="motogp.html" class="tarjeta tem-motogp">
+                <span class="texto-tarjeta">MOTOGP</span>
+            </a>
+            
+            <a href="coches.html" class="tarjeta tem-coches">
+                <span class="texto-tarjeta">COCHES</span>
+            </a>
+            
+            <a href="futbol.html" class="tarjeta tem-futbol">
+                <span class="texto-tarjeta">FÚTBOL</span>
+            </a>
+            
+            <a href="padel.html" class="tarjeta tem-padel">
+                <span class="texto-tarjeta">PÁDEL</span>
+            </a>
+            
+            <a href="papel.html" class="tarjeta tem-papel">
+                <span class="texto-tarjeta">EN PAPEL</span>
+            </a>
+        </div>
+    </section>
+
+    <section id="sobre-mi" class="about-section">
+        <div class="about-container">
+            <div class="about-text">
+                <h2>Sobre mí</h2>
+                <p>Un periodista deportivo especializado en distintos ámbitos. Desde que empecé en mis prácticas universitarias en el programa de televisión ‘Más que Coches’, me especialice en el mundo del motor, y poco a poco he ido creciendo en este tanto en Marca como en Autobild cubriendo todo tipo de deportes de motor y noticias sobre los últimos modelos de todas las firmas. Además he podido escribir en el diario más leído del país sobre deportes como fútbol o pádel. Especialmente sobre el primero, siendo parte de la creación de la última edición de la Guía Marca.</p>
+            </div>
+            <div class="about-image">
+                <img src="img/Foto_Sobre_mi.jpeg" alt="Tu foto de perfil">
+            </div>
+        </div>
+    </section>
+
+    <footer id="contacto">
+        <div class="footer-content">
+            <h3>CONTACTO</h3>
+
+            <a href="mailto:jpg61201@gmail.com" class="footer-email">
+                jpg61201@gmail.com
+            </a>
+
+            <div class="footer-links">
+                <a href="https://www.linkedin.com/in/javier-pazos-gurich?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app" target="_blank" class="footer-item">
+                    <i class="fab fa-linkedin"></i> LinkedIn
+                </a>
+                <span class="divider">|</span>
+                <a href="docs/Curriculum Javier Pazos.pdf" target="_blank" class="footer-item">
+                    <i class="fas fa-file-alt"></i> CV
+                </a>
+            </div>
+            <p class="copyright">&copy; 2026 Javier Pazos Gurich. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+
+</body>
+</html>

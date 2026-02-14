@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noticias de Coches</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-center">
+            <a href="index.html" class="nav-title">INICIO</a>
+        </div>
+        <div class="menu-toggle" id="mobile-menu">
+            <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+        </div>
+        <ul class="nav-dropdown" id="nav-dropdown">
+            <li><a href="index.html">Volver al Inicio</a></li>
+        </ul>
+    </nav>
+
+    <header class="page-header" style="text-align:center; padding: 3rem 1rem; background: #eee;">
+        <h1 id="titulo-pagina">NOTICIAS COCHES</h1> 
+    </header>
+
+    <section class="tematicas-container">
+        
+        <div class="grid-tarjetas" 
+             id="contenedor-dinamico" 
+             data-sheet="https://docs.google.com/spreadsheets/d/e/2PACX-1vTWAe4JoSmQwJJKujNnkhteGplXNxtk0tvwasmcm4n19T_mUmBN_U9PXccODV5A8hLbz0Q6G2YaGqid/pub?output=csv"
+             data-modalidad="Coches">
+             
+             <p style="text-align:center; width:100%;">Cargando noticias de Coches...</p>
+        </div>
+
+    </section>
+
+    <footer id="contacto">
+        <div class="footer-content">
+            <p class="copyright">&copy; 2026 Javier Pazos Gurich.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
