@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let allNews = [];       // Todas las noticias tal cual vienen del CSV
     let currentPage = 1;    // Página actual
-    const itemsPerPage = 10; // Límite de noticias por página
+    const itemsPerPage = 9; // Límite de noticias por página
 
     if (contenedor) {
         const sheetURL = contenedor.getAttribute('data-sheet');
@@ -186,3 +186,4 @@ document.addEventListener('DOMContentLoaded', () => {
         return new Date(0); 
     }
 });
+
