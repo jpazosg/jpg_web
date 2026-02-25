@@ -234,42 +234,113 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // =========================================================
-// --- LÓGICA DEL VISOR DE IMÁGENES (LIGHTBOX) ---
+// --- LÓGICA DEL VISOR CON ZOOM Y ARRASTRE (PROFESIONAL) ---
 // =========================================================
 
 document.addEventListener('DOMContentLoaded', () => {
     
-    // Elementos del visor
     const modal = document.getElementById("visor-modal");
     const modalImg = document.getElementById("img-full");
     const captionText = document.getElementById("modal-caption");
     const spanCerrar = document.getElementsByClassName("cerrar-modal")[0];
-
-    // Seleccionamos todas las imágenes de la galería "En Papel"
-    // (Asegúrate de que tus fotos en papel.html tengan la clase "papel-img")
+    
+    // Asegúrate de que tus fotos en papel.html tengan la clase "papel-img"
     const imagenes = document.querySelectorAll('.papel-img');
 
+    // Variables para controlar el zoom y la posición
+    let escalaActual = 1;
+    let currentX = 0;
+    let currentY = 0;
+    let isDragging = false;
+    let startX, startY;
+
     if (modal && modalImg) {
+        
+        // --- FUNCIÓN PARA ABRIR EL MODAL ---
         imagenes.forEach(img => {
             img.addEventListener('click', function() {
-                modal.style.display = "flex"; // Mostramos el visor
-                modalImg.src = this.src;      // Ponemos la foto clicada
-                if(captionText) captionText.innerHTML = this.alt; // Ponemos el texto alternativo como pie de foto
+                modal.style.display = "flex";
+                modalImg.src = this.src;
+                if(captionText) captionText.innerHTML = this.alt;
+                
+                // IMPORTANTE: Resetear el zoom cada vez que se abre una foto nueva
+                resetZoom();
             });
         });
 
-        // Cerrar al pulsar la X
-        if (spanCerrar) {
-            spanCerrar.onclick = function() { 
-                modal.style.display = "none";
-            }
+        // --- FUNCIÓN PARA CERRAR EL MODAL ---
+        function cerrarModal() {
+            modal.style.display = "none";
+            resetZoom(); // Reseteamos al cerrar por si acaso
         }
 
-        // Cerrar al pulsar fuera de la imagen (en el fondo negro)
+        if (spanCerrar) spanCerrar.onclick = cerrarModal;
+        
         modal.onclick = function(event) {
-            if (event.target === modal) {
-                modal.style.display = "none";
+            // Solo cierra si hacemos clic en el fondo negro, no en la imagen
+            if (event.target === modal) cerrarModal();
+        }
+
+        // --- LÓGICA DE ZOOM (RUEDA DEL RATÓN) ---
+        modal.addEventListener('wheel', function(e) {
+            e.preventDefault(); // Evita que la página haga scroll
+
+            // Calculamos la nueva escala (hacia arriba acerca, hacia abajo aleja)
+            const delta = e.deltaY * -0.001;
+            escalaActual += delta;
+
+            // Limitamos el zoom: Mínimo 1 (tamaño original), Máximo 5 veces más grande
+            escalaActual = Math.min(Math.max(1, escalaActual), 5);
+
+            // Si volvemos al tamaño original, reseteamos la posición
+            if (escalaActual === 1) {
+                currentX = 0;
+                currentY = 0;
             }
+
+            aplicarTransformacion();
+        });
+
+        // --- LÓGICA DE ARRASTRAR (PANEO) ---
+        modalImg.addEventListener('mousedown', function(e) {
+            // Solo permitimos arrastrar si hay zoom (escala > 1)
+            if (escalaActual > 1) {
+                isDragging = true;
+                startX = e.clientX - currentX;
+                startY = e.clientY - currentY;
+                modalImg.classList.add('arrastrando'); // Cambia el cursor
+                e.preventDefault(); // Evita comportamientos raros del navegador
+            }
+        });
+
+        document.addEventListener('mousemove', function(e) {
+            if (isDragging) {
+                currentX = e.clientX - startX;
+                currentY = e.clientY - startY;
+                aplicarTransformacion();
+            }
+        });
+
+        document.addEventListener('mouseup', function() {
+            if (isDragging) {
+                isDragging = false;
+                modalImg.classList.remove('arrastrando');
+            }
+        });
+
+        // --- FUNCIONES AUXILIARES ---
+        
+        // Aplica los cambios de CSS a la imagen
+        function aplicarTransformacion() {
+            modalImg.style.transform = `translate(${currentX}px, ${currentY}px) scale(${escalaActual})`;
+        }
+
+        // Vuelve la imagen a su estado original
+        function resetZoom() {
+            escalaActual = 1;
+            currentX = 0;
+            currentY = 0;
+            modalImg.style.transform = "translate(0px, 0px) scale(1)";
         }
     }
 });

@@ -997,3 +997,30 @@ footer {
         width: 100%;
     }
 }
+
+/* =========================================================
+   --- AÑADIDO PARA EL ZOOM EN EL VISOR --- 
+   ========================================================= */
+
+/* Cuando el ratón pasa por encima de la imagen en el visor */
+.modal-contenido {
+    cursor: grab; /* Muestra una mano abierta indicando que se puede agarrar */
+    transition: transform 0.1s ease-out; /* Hace que el movimiento del zoom sea suave pero rápido */
+    /* Quitamos el max-height/width para que el zoom no se limite */
+    max-width: none;
+    max-height: none;
+    /* Ajustamos la altura inicial para que quepa bien */
+    height: 85vh; 
+    width: auto;
+}
+
+/* Cuando estamos arrastrando la imagen */
+.modal-contenido.arrastrando {
+    cursor: grabbing; /* Muestra una mano cerrada */
+    transition: none; /* Quitamos la transición para que el arrastre sea instantáneo */
+}
+
+/* IMPORTANTE: El contenedor del modal debe ocultar lo que se sale */
+.modal {
+    overflow: hidden; /* Si hacemos mucho zoom, que no se salgan las barras de scroll */
+}
