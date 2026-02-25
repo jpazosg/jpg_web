@@ -136,34 +136,55 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // --- NUEVO PARSEADOR CSV ROBUSTO ---
+    // Esta función lee el Excel sin romperse por culpa de los párrafos largos
+    function parsearCSV(str) {
+        const arr = [];
+        let quote = false;
+        let row = 0, col = 0;
+        for (let c = 0; c < str.length; c++) {
+            let cc = str[c], nc = str[c+1];
+            arr[row] = arr[row] || [];
+            arr[row][col] = arr[row][col] || '';
+            
+            if (cc == '"' && quote && nc == '"') { arr[row][col] += cc; ++c; continue; }
+            if (cc == '"') { quote = !quote; continue; }
+            if (cc == ',' && !quote) { ++col; continue; }
+            if (cc == '\r' && nc == '\n' && !quote) { ++row; col = 0; ++c; continue; } 
+            if (cc == '\n' && !quote) { ++row; col = 0; continue; }
+            if (cc == '\r' && !quote) { ++row; col = 0; continue; }
+            
+            arr[row][col] += cc;
+        }
+        return arr;
+    }
+
     async function cargarOpiniones(url, contenedor) {
         try {
             const respuesta = await fetch(url);
             const texto = await respuesta.text();
             
-            // Separar filas quitando la cabecera
-            const filas = texto.split("\n").slice(1); 
+            // Leemos el texto con nuestra nueva función y quitamos la cabecera
+            const filas = parsearCSV(texto);
+            filas.shift(); // Borra la fila 0 (Cabecera)
+
             contenedor.innerHTML = ''; 
 
-            filas.forEach(filaRaw => {
-                const regex = /,(?=(?:(?:[^"]*"){2})*[^"]*$)/;
-                const col = filaRaw.split(regex).map(val => val.replace(/^"|"$/g, '').trim());
-
-                // Google Sheets de Opinión: 0:Fecha, 1:Titulo, 2:Contenido, 3:Foto
-                if (col.length < 4) return; 
+            filas.forEach(col => {
+                // Si la fila está vacía o no tiene al menos 4 datos, se ignora
+                if (col.length < 4 || !col[0]) return; 
 
                 const [fecha, titulo, contenidoRaw, foto] = col;
                 
-                // Formatear saltos de línea para que se vean bien los párrafos
-                const contenidoFormateado = contenidoRaw.replace(/\\n/g, '<br><br>').replace(/\n/g, '<br><br>');
+                // Transforma los saltos de línea invisibles del Excel en párrafos web
+                const contenidoFormateado = contenidoRaw.replace(/\n/g, '<br><br>');
 
                 // Crear el elemento artículo
                 const tarjeta = document.createElement('article');
                 tarjeta.classList.add('opinion-tarjeta');
                 
-                // HTML de la tarjeta (Corta y Larga)
                 tarjeta.innerHTML = `
-                    <div class="opinion-vista-corta" style="background-image: linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.9)), url('${foto}');">
+                    <div class="opinion-vista-corta" style="background-image: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.9)), url('${foto}');">
                         <span class="opinion-fecha-corta">${fecha}</span>
                         <h3 class="opinion-titulo-corto">${titulo}</h3>
                     </div>
@@ -180,33 +201,22 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 `;
 
-                // --- LÓGICA DE EXPANSIÓN ---
+                // --- LÓGICA DE ABRIR Y CERRAR ---
                 const vistaCorta = tarjeta.querySelector('.opinion-vista-corta');
                 const btnCerrar = tarjeta.querySelector('.btn-cerrar-articulo');
 
-                // Al hacer click en la foto (Vista corta)
                 vistaCorta.addEventListener('click', () => {
-                    // Opcional: Cerrar cualquier otro artículo que estuviera abierto
+                    // Cierra las demás
                     document.querySelectorAll('.opinion-tarjeta.expandida').forEach(t => t.classList.remove('expandida'));
-                    
-                    // Expandir este artículo
+                    // Abre esta
                     tarjeta.classList.add('expandida');
-                    
-                    // Hacer un pequeño scroll automático para centrar el título en la pantalla
-                    setTimeout(() => {
-                        tarjeta.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }, 100);
+                    setTimeout(() => tarjeta.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
                 });
 
-                // Al hacer click en el botón de cerrar
                 btnCerrar.addEventListener('click', (e) => {
-                    e.stopPropagation(); // Evita que se disparen otros clicks
+                    e.stopPropagation();
                     tarjeta.classList.remove('expandida');
-                    
-                    // Volver a hacer scroll para no perder de vista la tarjeta original
-                    setTimeout(() => {
-                        tarjeta.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    }, 100);
+                    setTimeout(() => tarjeta.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100);
                 });
 
                 contenedor.appendChild(tarjeta);
