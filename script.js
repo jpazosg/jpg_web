@@ -232,3 +232,44 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 });
+
+// =========================================================
+// --- LÓGICA DEL VISOR DE IMÁGENES (LIGHTBOX) ---
+// =========================================================
+
+document.addEventListener('DOMContentLoaded', () => {
+    
+    // Elementos del visor
+    const modal = document.getElementById("visor-modal");
+    const modalImg = document.getElementById("img-full");
+    const captionText = document.getElementById("modal-caption");
+    const spanCerrar = document.getElementsByClassName("cerrar-modal")[0];
+
+    // Seleccionamos todas las imágenes de la galería "En Papel"
+    // (Asegúrate de que tus fotos en papel.html tengan la clase "papel-img")
+    const imagenes = document.querySelectorAll('.papel-img');
+
+    if (modal && modalImg) {
+        imagenes.forEach(img => {
+            img.addEventListener('click', function() {
+                modal.style.display = "flex"; // Mostramos el visor
+                modalImg.src = this.src;      // Ponemos la foto clicada
+                if(captionText) captionText.innerHTML = this.alt; // Ponemos el texto alternativo como pie de foto
+            });
+        });
+
+        // Cerrar al pulsar la X
+        if (spanCerrar) {
+            spanCerrar.onclick = function() { 
+                modal.style.display = "none";
+            }
+        }
+
+        // Cerrar al pulsar fuera de la imagen (en el fondo negro)
+        modal.onclick = function(event) {
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        }
+    }
+});
