@@ -344,3 +344,99 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 });
+
+// =========================================================
+// --- LÓGICA PARA LAS 3 ÚLTIMAS OPINIONES EN LA PORTADA ---
+// =========================================================
+
+document.addEventListener('DOMContentLoaded', () => {
+    
+    const contenedorUltimas = document.getElementById('ultimas-opiniones');
+
+    if (contenedorUltimas) {
+        const sheetURL = contenedorUltimas.getAttribute('data-sheet');
+        
+        if (sheetURL && !sheetURL.includes("PEGA_AQUI")) {
+            cargarUltimasOpiniones(sheetURL, contenedorUltimas);
+        }
+    }
+
+    function parsearCSV(str) {
+        const arr = [];
+        let quote = false;
+        let row = 0, col = 0;
+        for (let c = 0; c < str.length; c++) {
+            let cc = str[c], nc = str[c+1];
+            arr[row] = arr[row] || [];
+            arr[row][col] = arr[row][col] || '';
+            
+            if (cc == '"' && quote && nc == '"') { arr[row][col] += cc; ++c; continue; }
+            if (cc == '"') { quote = !quote; continue; }
+            if (cc == ',' && !quote) { ++col; continue; }
+            if (cc == '\r' && nc == '\n' && !quote) { ++row; col = 0; ++c; continue; } 
+            if (cc == '\n' && !quote) { ++row; col = 0; continue; }
+            if (cc == '\r' && !quote) { ++row; col = 0; continue; }
+            
+            arr[row][col] += cc;
+        }
+        return arr;
+    }
+
+    // --- NUEVO: Función para que el navegador entienda las fechas (DD/MM/YYYY) ---
+    function convertirFechaParaOrdenar(fechaStr) {
+        if (!fechaStr) return 0;
+        const partes = fechaStr.split('/');
+        if (partes.length === 3) {
+            // JavaScript lee los meses del 0 al 11, por eso restamos 1 al mes
+            return new Date(partes[2], partes[1] - 1, partes[0]).getTime();
+        }
+        // Por si alguna vez escribes la fecha en otro formato
+        return new Date(fechaStr).getTime() || 0;
+    }
+
+    async function cargarUltimasOpiniones(url, contenedor) {
+        try {
+            const respuesta = await fetch(url);
+            const texto = await respuesta.text();
+            
+            const filas = parsearCSV(texto);
+            filas.shift(); // Borramos la cabecera (Fila 1)
+
+            // 1. Filtramos las válidas
+            const filasValidas = filas.filter(col => col.length >= 4 && col[0].trim() !== '');
+
+            // --- NUEVO: Ordenamos todas las filas por fecha (de más reciente a más antigua) ---
+            filasValidas.sort((a, b) => {
+                const fechaA = convertirFechaParaOrdenar(a[0].trim());
+                const fechaB = convertirFechaParaOrdenar(b[0].trim());
+                return fechaB - fechaA; // Orden descendente
+            });
+
+            // 2. Extraemos ÚNICAMENTE las 3 primeras después de haberlas ordenado
+            const lasTresUltimas = filasValidas.slice(0, 3);
+
+            contenedor.innerHTML = ''; 
+
+            lasTresUltimas.forEach(col => {
+                const [fecha, titulo, contenido, foto] = col;
+                
+                const tarjeta = `
+                    <a href="opinion.html" class="news-item">
+                        <img src="${foto}" alt="${titulo}">
+                        <p>${titulo}</p>
+                    </a>
+                `;
+                
+                contenedor.innerHTML += tarjeta;
+            });
+
+            if (contenedor.innerHTML === '') {
+                contenedor.innerHTML = '<p style="text-align:center; width: 100%;">No hay columnas recientes.</p>';
+            }
+
+        } catch (error) {
+            console.error("Error cargando últimas opiniones:", error);
+            contenedor.innerHTML = '<p style="text-align:center; width: 100%;">Error al cargar las columnas de opinión.</p>';
+        }
+    }
+});
