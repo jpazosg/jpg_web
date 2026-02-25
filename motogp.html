@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Noticias de MotoGP</title>
-    <link rel="shortcut icon" href="logo.jpeg?v=2" type="image/x-icon">
-    <link rel="icon" href="logo.jpeg?v=2" type="image/jpeg">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -13,9 +11,7 @@
 
     <nav class="navbar">
         <div class="nav-center">
-            <a href="index.html" class="nav-title">
-                <img src="logo.jpeg" alt="Logo" class="nav-logo">
-                INICIO</a>
+            <a href="index.html" class="nav-title">INICIO</a>
         </div>
         <div class="menu-toggle" id="mobile-menu">
             <span class="bar"></span><span class="bar"></span><span class="bar"></span>
@@ -31,26 +27,13 @@
 
     <section class="tematicas-container">
         
-        <div class="controls-container">
-            <label for="sort-select">Ordenar por:</label>
-            <select id="sort-select">
-                <option value="default" selected>Orden original</option>
-                <option value="date-desc">Fecha (Más nuevas primero)</option>
-                <option value="date-asc">Fecha (Más antiguas primero)</option>
-                <option value="title-asc">Título (A-Z)</option>
-                <option value="title-desc">Título (Z-A)</option>
-            </select>
-        </div>
-        
         <div class="grid-tarjetas" 
              id="contenedor-dinamico" 
-             data-sheet="https://docs.google.com/spreadsheets/d/e/2PACX-1vQbkJtXg5k9agS5Xg980Sjpw9TlA8SuEc5BsaN2V1rqWQmM8Jdi7uBIefDrpzw0nT1dw_6KnaOfjO3U/pub?output=csv"
+             data-sheet="https://docs.google.com/spreadsheets/d/e/2PACX-1vTWAe4JoSmQwJJKujNnkhteGplXNxtk0tvwasmcm4n19T_mUmBN_U9PXccODV5A8hLbz0Q6G2YaGqid/pub?output=csv"
              data-modalidad="MotoGP">
              
              <p style="text-align:center; width:100%;">Cargando noticias de MotoGP...</p>
         </div>
-
-        <div class="pagination-container" id="pagination"></div>
 
     </section>
 
@@ -64,4 +47,3 @@
 
 </body>
 </html>
-

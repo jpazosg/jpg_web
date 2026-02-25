@@ -1,9 +1,18 @@
 /* --- RESET BÁSICO --- */
-* { margin: 0; padding: 0; box-sizing: border-box; }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
 /* --- SCROLL --- */
-html { scroll-behavior: smooth; }
-section, footer { scroll-margin-top: 100px; }
+html {
+    scroll-behavior: smooth;
+}
+
+section, footer {
+    scroll-margin-top: 100px; 
+}
 
 body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -15,55 +24,150 @@ body {
 a { text-decoration: none; color: inherit; transition: 0.3s; }
 
 /* --- 1. HEADER (4 FOTOS) --- */
-.top-header { position: relative; width: 100%; height: 350px; overflow: hidden; }
-.header-images { display: flex; width: 100%; height: 100%; }
-.header-images img { width: 25%; height: 100%; object-fit: cover; filter: brightness(0.7); }
-.header-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: white; z-index: 10; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); }
+.top-header {
+    position: relative;
+    width: 100%;
+    height: 350px;
+    overflow: hidden;
+}
+
+.header-images {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+.header-images img {
+    width: 25%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.7);
+}
+
+.header-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: white;
+    z-index: 10;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+}
+
 .header-overlay h1 { font-size: 3rem; text-transform: uppercase; letter-spacing: 2px; }
 .header-overlay p { font-size: 1.2rem; margin-top: 10px; }
 
 /* --- 2. BARRA DE NAVEGACIÓN --- */
-.navbar { display: flex; justify-content: space-between; align-items: center; background-color: #ff0000; color: white; padding: 1rem 5%; position: sticky; top: 0; z-index: 1000; }
-.nav-center { text-align: left; }
-/* 1. Añadimos Flexbox al título para que el texto se centre verticalmente con el logo */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ff0000;
+    color: white;
+    padding: 1rem 5%;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.nav-center {
+    text-align: left;
+}
+
 .nav-title {
     font-weight: bold;
     font-size: 1.5rem;
     letter-spacing: 2px;
-    display: flex;          /* NUEVO: Activa flexbox */
-    align-items: center;    /* NUEVO: Centra el texto verticalmente */
-    gap: 15px;              /* NUEVO: Espacio entre el logo y la palabra */
 }
 
-/* 2. Aumentamos el tamaño del logo */
-.nav-logo {
-    width: 70px !important;           /* PRUEBA CON 70px, 80px o 100px */
-    height: 70px !important;          /* Mantén siempre el mismo valor que arriba */
+/* --- 3. SECCIONES EDITORIALES --- */
+.editorial-section {
+    max-width: 1200px;
+    margin: 3rem auto;
+    padding: 0 20px;
+}
+
+.editorial-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 2rem;
+}
+
+.editorial-header h2 {
+    font-size: 2rem;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+}
+
+.editorial-logo {
+    height: 40px;
+    width: auto;
+    margin-right: 15px;
+}
+
+.ver-mas-btn {
+    font-weight: bold;
+    color: #666;
+    font-size: 0.9rem;
+}
+.ver-mas-btn:hover { color: #000; text-decoration: underline; }
+
+.news-circle-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+
+.news-item {
+    text-align: center;
+    width: 200px;
+}
+
+.news-item img {
+    width: 250px;
+    height: 250px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid white;
-    /* Ya no hace falta margin-right porque usamos 'gap' arriba */
+    margin-bottom: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    transition: transform 0.3s;
 }
-/* --- 3. SECCIONES EDITORIALES --- */
-.editorial-section { max-width: 1200px; margin: 3rem auto; padding: 0 20px; }
-.editorial-header { display: flex; align-items: center; gap: 15px; margin-bottom: 2rem; }
-.editorial-header h2 { font-size: 2rem; text-transform: uppercase; display: flex; align-items: center; }
-.editorial-logo { height: 40px; width: auto; margin-right: 15px; }
-.ver-mas-btn { font-weight: bold; color: #666; font-size: 0.9rem; }
-.ver-mas-btn:hover { color: #000; text-decoration: underline; }
-.news-circle-container { display: flex; justify-content: space-around; flex-wrap: wrap; gap: 30px; }
-.news-item { text-align: center; width: 200px; }
-.news-item img { width: 250px; height: 250px; border-radius: 50%; object-fit: cover; margin-bottom: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); transition: transform 0.3s; }
+
 .news-item:hover img { transform: scale(1.05); }
+
 .news-item p { font-weight: 500; font-size: 0.95rem; }
+
 .separator { width: 80%; margin: 2rem auto; border: 0; border-top: 1px solid #ddd; }
 
 /* --- 4. TEMÁTICAS --- */
-.tematicas-container { padding: 4rem 20px; background-color: #f4f4f4; text-align: center; }
-.titulo-tematicas { font-size: 2rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 3rem; color: #111; font-weight: 700; }
-.grid-tarjetas { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 1000px; margin: 0 auto; }
+.tematicas-container {
+    padding: 4rem 20px;
+    background-color: #f4f4f4;
+    text-align: center;
+}
 
-/* TARJETAS DEL INDEX */
+.titulo-tematicas {
+    font-size: 2rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 3rem;
+    color: #111;
+    font-weight: 700;
+}
+
+.grid-tarjetas {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+/* ESTILO DE LA TARJETA CONTROLADO DESDE AQUÍ */
 .tarjeta {
     background-color: #333;
     border: 1px solid #ddd;
@@ -74,30 +178,83 @@ a { text-decoration: none; color: inherit; transition: 0.3s; }
     text-decoration: none;
     transition: all 0.3s ease;
     box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    
+    /* PROPIEDADES DE LA IMAGEN DE FONDO */
     background-size: cover;
     background-position: center;
     position: relative;
+
+    /* AQUI CAPTURAMOS LA RUTA QUE ESCRIBISTE EN EL HTML */
     background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), var(--bg-image);
 }
-.texto-tarjeta { font-size: 1.5rem; font-weight: 800; text-transform: uppercase; color: #ffffff; letter-spacing: 1px; z-index: 2; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
-.tarjeta:hover { transform: scale(1.02); box-shadow: 0 10px 20px rgba(0,0,0,0.3); filter: brightness(1.1); }
+
+.texto-tarjeta {
+    font-size: 1.5rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: #ffffff;
+    letter-spacing: 1px;
+    z-index: 2;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+}
+
+.tarjeta:hover {
+    transform: scale(1.02);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    filter: brightness(1.1);
+}
 
 /* --- 5. SOBRE MÍ --- */
-.about-section { padding: 4rem 20px; background-color: white; }
-.about-container { max-width: 1000px; margin: 0 auto; display: flex; align-items: center; gap: 50px; }
+.about-section {
+    padding: 4rem 20px;
+    background-color: white;
+}
+
+.about-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 50px;
+}
+
 .about-text { flex: 1; }
 .about-text h2 { font-size: 2.5rem; margin-bottom: 1.5rem; }
 .about-image { flex: 1; }
 .about-image img { width: 100%; border-radius: 5px; box-shadow: 10px 10px 0 #000; }
 
 /* --- 6. FOOTER --- */
-footer { background-color: #000000; color: #fff; padding: 3rem 0; text-align: center; }
+footer {
+    background-color: #000000;
+    color: #fff;
+    padding: 3rem 0;
+    text-align: center;
+}
+
 .footer-content h3 { margin-bottom: 1.5rem; letter-spacing: 2px; }
-.footer-email { display: block; font-size: 1.5rem; color: #ffffff; text-decoration: none; margin-bottom: 2rem; font-weight: 300; transition: color 0.3s ease; }
+
+.footer-email {
+    display: block;
+    font-size: 1.5rem;
+    color: #ffffff;
+    text-decoration: none;
+    margin-bottom: 2rem;
+    font-weight: 300;
+    transition: color 0.3s ease;
+}
 .footer-email:hover { color: #f1c40f; text-decoration: underline; }
-.footer-links { display: flex; justify-content: center; align-items: center; gap: 15px; margin-bottom: 1.5rem; }
+
+.footer-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 1.5rem;
+}
+
 .footer-item { display: flex; align-items: center; gap: 8px; font-weight: bold; }
 .footer-item:hover { color: #f1c40f; }
+
 .divider { color: #555; }
 .copyright { font-size: 0.8rem; color: #777; }
 
@@ -111,52 +268,666 @@ footer { background-color: #000000; color: #fff; padding: 3rem 0; text-align: ce
     .about-container { flex-direction: column; }
     .news-circle-container { flex-direction: column; align-items: center; }
 }
-@media (max-width: 480px) { .grid-tarjetas { grid-template-columns: 1fr; } }
 
-/* MENÚ HAMBURGUESA */
-.menu-toggle { display: flex; flex-direction: column; cursor: pointer; gap: 5px; z-index: 1001; margin-left: 20px; }
-.menu-toggle .bar { width: 25px; height: 3px; background-color: white; border-radius: 3px; transition: all 0.3s ease; }
-.nav-dropdown { position: absolute; top: 100%; left: auto; right: 0; background-color: #000; width: 250px; list-style: none; padding: 10px 0; display: none; flex-direction: column; box-shadow: 0 5px 10px rgba(0,0,0,0.5); }
+@media (max-width: 480px) {
+    .grid-tarjetas { grid-template-columns: 1fr; }
+}
+
+/* --- ESTILOS DEL MENÚ HAMBURGUESA (DERECHA) --- */
+
+.menu-toggle {
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    gap: 5px;
+    z-index: 1001;
+    margin-left: 20px;
+}
+
+.menu-toggle .bar {
+    width: 25px;
+    height: 3px;
+    background-color: white;
+    border-radius: 3px;
+    transition: all 0.3s ease;
+}
+
+/* El menú desplegable */
+.nav-dropdown {
+    position: absolute;
+    top: 100%;
+    left: auto; 
+    right: 0;
+    background-color: #000;
+    width: 250px;
+    list-style: none;
+    padding: 10px 0;
+    display: none;
+    flex-direction: column;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.5);
+}
+
 .nav-dropdown li { width: 100%; }
-.nav-dropdown li a { display: block; color: white; padding: 15px 20px; font-size: 0.9rem; text-transform: uppercase; border-bottom: 1px solid #333; text-align: right; }
-.nav-dropdown li a:hover { background-color: #333; color: #f1c40f; }
+
+.nav-dropdown li a {
+    display: block;
+    color: white;
+    padding: 15px 20px;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    border-bottom: 1px solid #333;
+    text-align: right;
+}
+
+.nav-dropdown li a:hover {
+    background-color: #333;
+    color: #f1c40f;
+}
+
+/* Clase activa */
 .nav-dropdown.active { display: flex; }
+
 .menu-toggle.active .bar:nth-child(2) { opacity: 0; }
 .menu-toggle.active .bar:nth-child(1) { transform: translateY(8px) rotate(45deg); }
 .menu-toggle.active .bar:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
 
-/* TARJETAS DINÁMICAS (NOTICIAS) */
-.tarjeta-dinamica { align-items: flex-end; justify-content: flex-start; padding: 20px; text-align: left; }
-.contenido-tarjeta-dinamica { width: 100%; z-index: 2; }
-.fecha-tarjeta { display: inline-block; background-color: #f1c40f; color: #000; font-size: 0.8rem; font-weight: bold; padding: 2px 8px; border-radius: 4px; margin-bottom: 8px; text-transform: uppercase; }
-.titulo-tarjeta { font-size: 1.1rem; color: white; line-height: 1.3; font-weight: 700; text-shadow: 1px 1px 3px rgba(0,0,0,0.9); margin: 0; }
-.tarjeta-dinamica:hover .contenido-tarjeta-dinamica { transform: translateY(-5px); transition: transform 0.3s ease; }
+/* --- ESTILOS PARA TARJETAS DINÁMICAS (GOOGLE SHEETS) --- */
+.tarjeta-dinamica {
+    align-items: flex-end; 
+    justify-content: flex-start;
+    padding: 20px;
+    text-align: left;
+}
 
-/* GALERÍA MASONRY */
-.gallery-container { max-width: 1200px; margin: 3rem auto; padding: 0 20px; column-count: 3; column-gap: 20px; }
-.gallery-item { break-inside: avoid; margin-bottom: 20px; position: relative; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: transform 0.3s ease; background-color: #fff; }
-.gallery-item img { width: 100%; height: auto; display: block; }
-.gallery-item:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
-.gallery-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); opacity: 0; transition: opacity 0.3s ease; display: flex; align-items: flex-end; padding: 20px; }
-.gallery-item:hover .gallery-overlay { opacity: 1; }
-.gallery-text h3 { color: #f1c40f; font-size: 1.2rem; margin-bottom: 5px; text-transform: uppercase; }
-.gallery-text p { color: white; font-size: 0.9rem; font-weight: 300; }
-.quote-item { background-color: #f1c40f; padding: 30px; text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 200px; }
-.quote-item blockquote { font-family: 'Times New Roman', serif; font-size: 1.5rem; font-style: italic; color: #111; margin-bottom: 15px; line-height: 1.4; }
-.quote-item cite { font-weight: bold; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; }
-@media (max-width: 900px) { .gallery-container { column-count: 2; } }
-@media (max-width: 600px) { .gallery-container { column-count: 1; } }
+.contenido-tarjeta-dinamica {
+    width: 100%;
+    z-index: 2;
+}
 
-/* ESTILOS DE ORDENACIÓN Y PAGINACIÓN */
-.controls-container { max-width: 1000px; margin: 0 auto 20px auto; text-align: right; padding: 0 10px; }
-.controls-container label { font-weight: bold; margin-right: 10px; font-size: 0.9rem; }
-.controls-container select { padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; background-color: white; font-family: inherit; cursor: pointer; }
-.pagination-container { margin-top: 40px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
-.page-btn { padding: 8px 16px; background-color: white; border: 1px solid #ddd; cursor: pointer; font-weight: bold; transition: all 0.3s ease; border-radius: 4px; }
-.page-btn:hover { background-color: #eee; }
-.page-btn.active { background-color: #ff0000; color: white; border-color: #ff0000; }
+.fecha-tarjeta {
+    display: inline-block;
+    background-color: #f1c40f;
+    color: #000;
+    font-size: 0.8rem;
+    font-weight: bold;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}
 
+.titulo-tarjeta {
+    font-size: 1.1rem;
+    color: white;
+    line-height: 1.3;
+    font-weight: 700;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.9);
+    margin: 0;
+}
 
+.tarjeta-dinamica:hover .contenido-tarjeta-dinamica {
+    transform: translateY(-5px);
+    transition: transform 0.3s ease;
+}
 
+/* --- ESTILOS GALERÍA MASONRY (EN PAPEL) --- */
+.gallery-container {
+    max-width: 1200px;
+    margin: 3rem auto;
+    padding: 0 20px;
+    column-count: 3; 
+    column-gap: 20px;
+}
 
+.gallery-item {
+    break-inside: avoid; 
+    margin-bottom: 20px;
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+    background-color: #fff;
+}
 
+.gallery-item img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.gallery-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+.gallery-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    display: flex;
+    align-items: flex-end;
+    padding: 20px;
+}
+
+.gallery-item:hover .gallery-overlay {
+    opacity: 1;
+}
+
+.gallery-text h3 {
+    color: #f1c40f;
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+}
+
+.gallery-text p {
+    color: white;
+    font-size: 0.9rem;
+    font-weight: 300;
+}
+
+.quote-item {
+    background-color: #f1c40f;
+    padding: 30px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+}
+
+.quote-item blockquote {
+    font-family: 'Times New Roman', serif;
+    font-size: 1.5rem;
+    font-style: italic;
+    color: #111;
+    margin-bottom: 15px;
+    line-height: 1.4;
+}
+
+.quote-item cite {
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+}
+
+@media (max-width: 900px) {
+    .gallery-container { column-count: 2; }
+}
+
+@media (max-width: 600px) {
+    .gallery-container { column-count: 1; }
+}
+
+/* =========================================================
+   --- ESTILOS EXCLUSIVOS PARA LA PÁGINA "EN PAPEL" --- 
+   ========================================================= */
+
+/* Contenedor principal */
+.papel-container {
+    max-width: 1000px;
+    margin: 4rem auto;
+    padding: 0 20px;
+}
+
+/* Títulos estilo etiqueta negra */
+.papel-header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 3rem;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.papel-tag-1 {
+    background-color: #000;
+    color: #fff;
+    padding: 8px 15px;
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+}
+
+.papel-tag-2 {
+    background-color: #000;
+    color: #fff;
+    padding: 8px 15px;
+    font-size: 1.1rem;
+    line-height: 1.4;
+    max-width: 600px;
+}
+
+/* Cuadrícula de fotos (3 columnas) */
+.papel-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+}
+
+/* Estilo de cada imagen */
+.papel-grid img {
+    width: 100%;
+    aspect-ratio: 1 / 1; /* Esto fuerza a que sean cuadrados perfectos */
+    object-fit: cover;   /* Evita que la foto se deforme o se achate */
+    border-radius: 4px;  /* Bordes ligerísimamente redondeados */
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4); /* Sombra elegante */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background-color: #111; /* Por si tarda en cargar la imagen */
+    cursor: pointer;
+}
+
+.papel-grid img:hover {
+    transform: scale(1.03); /* Ligero zoom al pasar el ratón */
+    box-shadow: 0 12px 25px rgba(0,0,0,0.6);
+}
+
+/* Botón inferior +mas */
+.papel-footer-btn {
+    text-align: center;
+    margin-top: 4rem;
+    margin-bottom: 2rem;
+}
+
+.btn-mas {
+    display: inline-block;
+    background-color: #000;
+    color: #fff;
+    padding: 10px 25px;
+    font-size: 1.3rem;
+    font-family: 'Times New Roman', Times, serif;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.btn-mas:hover {
+    background-color: #ff0000; /* Toque corporativo al pasar el ratón */
+    color: #fff;
+}
+
+/* Responsive para móviles y tablets */
+@media (max-width: 768px) {
+    .papel-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 columnas en tablet */
+        gap: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .papel-grid {
+        grid-template-columns: 1fr; /* 1 columna en móvil */
+    }
+    .papel-tag-1, .papel-tag-2 {
+        font-size: 1rem;
+    }
+}
+
+/* =========================================================
+   --- ESTILOS PARA LA PÁGINA "EN PAPEL" Y CABECERAS OSCURAS --- 
+   ========================================================= */
+
+/* Cabecera oscura (Sirve para En Papel y Guía Marca) */
+.dark-header {
+    text-align: center;
+    padding: 4rem 1rem;
+    background-color: #111;
+    color: white;
+    margin-bottom: 3rem;
+}
+
+.dark-header h1 {
+    font-size: 3rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+}
+
+.dark-header p {
+    font-style: italic;
+    color: #aaa;
+    font-size: 1.1rem;
+    margin-top: 10px;
+}
+
+/* Contenedor y Cuadrícula */
+.papel-container {
+    max-width: 1000px;
+    margin: 0 auto 4rem auto;
+    padding: 0 20px;
+}
+
+.papel-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+}
+
+/* Diseño de las fotos (Cuadradas, con sombra y efecto al pasar el ratón) */
+.papel-img {
+    width: 100%;
+    aspect-ratio: 1 / 1; 
+    object-fit: cover;   
+    border-radius: 4px;  
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4); 
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background-color: #111; 
+}
+
+.papel-img:hover {
+    transform: scale(1.03); 
+    box-shadow: 0 12px 25px rgba(0,0,0,0.6);
+}
+
+/* Clase para ocultar las fotos restantes */
+.oculta {
+    display: none !important;
+}
+
+/* Diseño del botón +mas */
+.papel-footer-btn {
+    text-align: center;
+    margin-top: 4rem;
+    margin-bottom: 2rem;
+}
+
+.btn-mas {
+    display: inline-block;
+    background-color: #000;
+    color: #fff;
+    padding: 10px 30px;
+    font-size: 1.3rem;
+    font-family: 'Times New Roman', Times, serif;
+    transition: background-color 0.3s ease;
+}
+
+.btn-mas:hover {
+    background-color: #ff0000; 
+}
+
+/* Responsive para móviles y tablets */
+@media (max-width: 768px) {
+    .dark-header h1 { font-size: 2.2rem; }
+    .papel-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
+}
+
+@media (max-width: 480px) {
+    .dark-header h1 { font-size: 1.8rem; }
+    .papel-grid { grid-template-columns: 1fr; }
+}
+
+/* --- PREVENCIÓN DEL LOGO GIGANTE --- */
+.nav-title {
+    display: flex;
+    align-items: center;
+}
+
+.nav-logo {
+    width: 50px !important;
+    height: 50px !important;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 15px;
+}
+
+/* --- CABECERA OSCURA TIPO "GUÍA MARCA" --- */
+.dark-header {
+    text-align: center;
+    padding: 4rem 1rem;
+    background-color: #111;
+    color: white;
+    margin-bottom: 3rem;
+}
+
+.dark-header h1 {
+    font-size: 3rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.dark-header p {
+    font-style: italic;
+    color: #aaa;
+    margin-top: 10px;
+    font-size: 1.1rem;
+}
+
+/* --- CUADRÍCULA EN PAPEL --- */
+.papel-container {
+    max-width: 1000px;
+    margin: 0 auto 4rem auto;
+    padding: 0 20px;
+}
+
+.papel-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+}
+
+.papel-img {
+    width: 100%;
+    aspect-ratio: 1 / 1; 
+    object-fit: cover;   
+    border-radius: 4px;  
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4); 
+    transition: transform 0.3s ease;
+    background-color: #111; 
+}
+
+.papel-img:hover {
+    transform: scale(1.03); 
+}
+
+/* --- ELEMENTOS DINÁMICOS (+MAS) --- */
+.oculta {
+    display: none !important;
+}
+
+.papel-footer-btn {
+    text-align: center;
+    margin-top: 4rem;
+    margin-bottom: 2rem;
+}
+
+.btn-mas {
+    display: inline-block;
+    background-color: #000;
+    color: #fff;
+    padding: 10px 30px;
+    font-size: 1.3rem;
+    font-family: 'Times New Roman', Times, serif;
+    transition: background-color 0.3s ease;
+}
+
+.btn-mas:hover {
+    background-color: #ff0000; 
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 768px) {
+    .dark-header h1 { font-size: 2.2rem; }
+    .papel-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
+}
+
+@media (max-width: 480px) {
+    .dark-header h1 { font-size: 1.8rem; }
+    .papel-grid { grid-template-columns: 1fr; }
+}
+
+/* =========================================================
+   --- ESTILOS PARA COLUMNAS DE OPINIÓN (EXPANDIBLES) --- 
+   ========================================================= */
+
+.opinion-page-header {
+    text-align: center;
+    padding: 4rem 1rem;
+    background-color: #111;
+    color: white;
+    margin-bottom: 3rem;
+}
+
+.opinion-page-header h1 { font-size: 2.5rem; letter-spacing: 2px; margin-bottom: 10px; }
+.opinion-page-header p { color: #ccc; font-size: 1.1rem; }
+
+.opiniones-container {
+    max-width: 1200px;
+    margin: 0 auto 5rem auto;
+    padding: 0 20px;
+}
+
+.opiniones-grid {
+    display: grid;
+    /* Esto crea columnas automáticas que se adaptan al móvil solas */
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); 
+    gap: 30px;
+}
+
+.mensaje-carga { text-align: center; grid-column: 1 / -1; width: 100%; }
+
+/* --- LA TARJETA BASE --- */
+.opinion-tarjeta {
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: all 0.4s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- VISTA CORTA (ESTILO F1) --- */
+.opinion-vista-corta {
+    height: 300px; /* Misma altura que las tarjetas de F1 */
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 25px;
+    color: white;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.opinion-tarjeta:hover:not(.expandida) {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.opinion-fecha-corta {
+    font-size: 0.85rem;
+    color: #ff0000; /* Color corporativo */
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+}
+
+.opinion-titulo-corto {
+    font-size: 1.4rem;
+    line-height: 1.3;
+    margin: 0;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+}
+
+/* --- VISTA LARGA (ARTÍCULO DESPLEGADO) --- */
+.opinion-vista-larga {
+    display: none; /* Oculto por defecto */
+    padding: 40px;
+}
+
+/* ESTADO MAGICO: Cuando se hace clic y añade la clase "expandida" */
+.opinion-tarjeta.expandida {
+    grid-column: 1 / -1; /* Ocupa toda la fila de lado a lado */
+    cursor: default;
+}
+
+.opinion-tarjeta.expandida .opinion-vista-corta {
+    display: none; /* Esconde la miniatura estilo F1 */
+}
+
+.opinion-tarjeta.expandida .opinion-vista-larga {
+    display: block; /* Muestra el artículo de lectura */
+    animation: aparecer 0.5s ease;
+}
+
+@keyframes aparecer {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Elementos de lectura */
+.opinion-titulo-largo {
+    font-size: 2.8rem;
+    font-family: 'Times New Roman', Times, serif;
+    color: #111;
+    margin-bottom: 10px;
+    line-height: 1.2;
+}
+
+.opinion-fecha-larga {
+    display: block;
+    color: #888;
+    margin-bottom: 30px;
+    font-size: 1rem;
+}
+
+.opinion-imagen-larga {
+    width: 100%;
+    max-height: 500px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 30px;
+}
+
+.opinion-texto-largo {
+    font-size: 1.15rem;
+    line-height: 1.8;
+    color: #222;
+    margin-bottom: 40px;
+    /* Para que el texto no sea gigante en PC */
+    max-width: 800px; 
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Letra Capitular para el inicio del artículo */
+.opinion-texto-largo::first-letter {
+    font-size: 3.5rem;
+    color: #ff0000;
+    float: left;
+    line-height: 0.8;
+    margin-right: 8px;
+    font-weight: bold;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.btn-cerrar-articulo {
+    display: block;
+    width: fit-content;
+    margin: 0 auto;
+    background-color: #000;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    font-family: 'Times New Roman', Times, serif;
+    transition: 0.3s;
+}
+
+.btn-cerrar-articulo:hover {
+    background-color: #ff0000;
+}
+
+@media (max-width: 768px) {
+    .opinion-titulo-largo { font-size: 2rem; }
+    .opinion-vista-larga { padding: 20px; }
+}

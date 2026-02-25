@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guía de Marca | Galería Visual</title>
-    <link rel="shortcut icon" href="logo.jpeg?v=2" type="image/x-icon">
-    <link rel="icon" href="logo.jpeg?v=2" type="image/jpeg">
-    <link rel="stylesheet" href="style.css">
+    <title>En Papel - Javier Pazos</title>
+    
+    <link rel="icon" href="img/logo.jpeg" type="image/jpeg">
+    
+    <link rel="stylesheet" href="style.css?v=3">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
@@ -14,8 +15,9 @@
     <nav class="navbar">
         <div class="nav-center">
             <a href="index.html" class="nav-title">
-                <img src="logo.jpeg" alt="Logo" class="nav-logo">
-                INICIO</a>
+                <img src="img/logo.jpeg" alt="Logo" class="nav-logo">
+                INICIO
+            </a>
         </div>
         <div class="menu-toggle" id="mobile-menu">
             <span class="bar"></span><span class="bar"></span><span class="bar"></span>
@@ -25,71 +27,32 @@
         </ul>
     </nav>
 
-    <header class="page-header" style="text-align:center; padding: 4rem 1rem; background-color: #111; color: white;">
-        <h1 style="font-size: 3rem; text-transform: uppercase; letter-spacing: 2px;">Guía de Marca</h1>
-        <p style="font-style: italic; color: #aaa; margin-top: 10px;">Crónicas visuales y recortes.</p>
+    <header class="page-header dark-header">
+        <h1>GUÍA DE MARCA</h1>
+        <p>Crónicas visuales y recortes</p>
     </header>
 
-    <section class="gallery-container">
-        
-        <div class="gallery-item">
-            <img src="https://images.unsplash.com/photo-1552168324-d612d77725e3?w=600" alt="Cámara">
-            <div class="gallery-overlay">
-                <div class="gallery-text">
-                    <h3>A pie de pista</h3>
-                    <p>Cubriendo el GP de Mónaco desde el pitlane.</p>
-                </div>
-            </div>
+    <main class="papel-container">
+        <div class="papel-grid">
+            
+            <img src="img/Guia_marca/foto1.jpg" alt="Página 1" class="papel-img">
+            <img src="img/Guia_marca/foto2.jpg" alt="Página 2" class="papel-img">
+            <img src="img/Guia_marca/foto3.jpg" alt="Página 3" class="papel-img">
+            <img src="img/Guia_marca/foto4.jpg" alt="Página 4" class="papel-img">
+            <img src="img/Guia_marca/foto5.jpg" alt="Página 5" class="papel-img">
+            <img src="img/Guia_marca/foto6.jpg" alt="Página 6" class="papel-img">
+            <img src="img/Guia_marca/foto7.jpg" alt="Página 7" class="papel-img">
+            <img src="img/Guia_marca/foto8.jpg" alt="Página 8" class="papel-img">
+            <img src="img/Guia_marca/foto9.jpg" alt="Página 9" class="papel-img">
+
+            <img src="img/Guia_marca/foto10.jpg" alt="Página 10" class="papel-img oculta">
+
         </div>
 
-        <div class="gallery-item">
-            <img src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600" alt="Periódico">
-            <div class="gallery-overlay">
-                <div class="gallery-text">
-                    <h3>Portada Marca</h3>
-                    <p>Edición especial del domingo.</p>
-                </div>
-            </div>
+        <div class="papel-footer-btn">
+            <a href="#" id="boton-cargar-mas" class="btn-mas">Ver todas</a>
         </div>
-
-        <div class="gallery-item quote-item">
-            <blockquote>
-                "El periodismo deportivo no es contar quién ganó, es explicar por qué importó."
-            </blockquote>
-            <cite>— Nota de editor</cite>
-        </div>
-
-        <div class="gallery-item">
-            <img src="https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?w=600" alt="Moto">
-            <div class="gallery-overlay">
-                <div class="gallery-text">
-                    <h3>Velocidad pura</h3>
-                    <p>El instante exacto del adelantamiento.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="gallery-item">
-            <img src="https://images.unsplash.com/photo-1495020689067-958852a7765e?w=600" alt="Prensa">
-            <div class="gallery-overlay">
-                <div class="gallery-text">
-                    <h3>La Redacción</h3>
-                    <p>Cierre de edición a las 3:00 AM.</p>
-                </div>
-            </div>
-        </div>
-
-         <div class="gallery-item">
-            <img src="https://images.unsplash.com/photo-1593341646261-2895db0f6a2e?w=600" alt="Fútbol">
-            <div class="gallery-overlay">
-                <div class="gallery-text">
-                    <h3>Final de Copa</h3>
-                    <p>Ambiente en las gradas previo al partido.</p>
-                </div>
-            </div>
-        </div>
-
-    </section>
+    </main>
 
     <footer id="contacto">
         <div class="footer-content">
@@ -98,7 +61,5 @@
     </footer>
 
     <script src="script.js"></script>
-
 </body>
-
 </html>
