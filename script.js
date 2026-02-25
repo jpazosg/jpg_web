@@ -516,12 +516,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Extraemos los datos exactos
                 const fecha = col[0];
                 const titulo = col[2];
-                const foto = col[4];
-                const enlace = col[5];
+                const foto = col[3];
+                const link = col[1];
                 
                 // Creamos la tarjeta (con target="_blank" para abrir en otra pestaña)
                 const tarjeta = `
-                    <a href="${enlace}" target="_blank" class="news-item">
+                    <a href="${link}" target="_blank" class="news-item">
                         <img src="${foto}" alt="${titulo}">
                         <p>${titulo}</p>
                     </a>
