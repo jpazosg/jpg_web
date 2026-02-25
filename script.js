@@ -440,3 +440,103 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 });
+
+// =========================================================
+// --- LÓGICA PARA LOS 3 ÚLTIMOS ARTÍCULOS DE AUTOBILD ---
+// =========================================================
+
+document.addEventListener('DOMContentLoaded', () => {
+    
+    const contenedorAutobild = document.getElementById('ultimas-autobild');
+
+    if (contenedorAutobild) {
+        const sheetURL = contenedorAutobild.getAttribute('data-sheet');
+        
+        if (sheetURL && !sheetURL.includes("PEGA_AQUI")) {
+            cargarUltimasAutobild(sheetURL, contenedorAutobild);
+        }
+    }
+
+    // Parseador CSV anti-errores
+    function parsearCSV(str) {
+        const arr = [];
+        let quote = false;
+        let row = 0, col = 0;
+        for (let c = 0; c < str.length; c++) {
+            let cc = str[c], nc = str[c+1];
+            arr[row] = arr[row] || [];
+            arr[row][col] = arr[row][col] || '';
+            
+            if (cc == '"' && quote && nc == '"') { arr[row][col] += cc; ++c; continue; }
+            if (cc == '"') { quote = !quote; continue; }
+            if (cc == ',' && !quote) { ++col; continue; }
+            if (cc == '\r' && nc == '\n' && !quote) { ++row; col = 0; ++c; continue; } 
+            if (cc == '\n' && !quote) { ++row; col = 0; continue; }
+            if (cc == '\r' && !quote) { ++row; col = 0; continue; }
+            
+            arr[row][col] += cc;
+        }
+        return arr;
+    }
+
+    // Traductor de fechas (DD/MM/YYYY)
+    function convertirFechaParaOrdenar(fechaStr) {
+        if (!fechaStr) return 0;
+        const partes = fechaStr.split('/');
+        if (partes.length === 3) {
+            return new Date(partes[2], partes[1] - 1, partes[0]).getTime();
+        }
+        return new Date(fechaStr).getTime() || 0;
+    }
+
+    async function cargarUltimasAutobild(url, contenedor) {
+        try {
+            const respuesta = await fetch(url);
+            const texto = await respuesta.text();
+            
+            const filas = parsearCSV(texto);
+            filas.shift(); // Borramos la cabecera
+
+            // 1. Filtramos (Asumimos 6 columnas: Fecha, Categoría, Título, Resumen, Foto, Enlace)
+            const filasValidas = filas.filter(col => col.length >= 6 && col[0].trim() !== '');
+
+            // 2. Ordenamos por fecha de más reciente a más antigua
+            filasValidas.sort((a, b) => {
+                const fechaA = convertirFechaParaOrdenar(a[0].trim());
+                const fechaB = convertirFechaParaOrdenar(b[0].trim());
+                return fechaB - fechaA; 
+            });
+
+            // 3. Nos quedamos con los 3 primeros
+            const lasTresUltimas = filasValidas.slice(0, 3);
+
+            contenedor.innerHTML = ''; 
+
+            lasTresUltimas.forEach(col => {
+                // Extraemos los datos exactos
+                const fecha = col[0];
+                const titulo = col[2];
+                const foto = col[4];
+                const enlace = col[5];
+                
+                // Creamos la tarjeta (con target="_blank" para abrir en otra pestaña)
+                const tarjeta = `
+                    <a href="${enlace}" target="_blank" class="news-item">
+                        <img src="${foto}" alt="${titulo}">
+                        <p>${titulo}</p>
+                    </a>
+                `;
+                
+                contenedor.innerHTML += tarjeta;
+            });
+
+            if (contenedor.innerHTML === '') {
+                contenedor.innerHTML = '<p style="text-align:center; width: 100%;">No hay artículos recientes.</p>';
+            }
+
+        } catch (error) {
+            console.error("Error cargando AutoBild:", error);
+            contenedor.innerHTML = '<p style="text-align:center; width: 100%;">Error al cargar los artículos de AutoBild.</p>';
+        }
+    }
+});
