@@ -457,7 +457,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Parseador CSV anti-errores
     function parsearCSV(str) {
         const arr = [];
         let quote = false;
@@ -479,7 +478,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return arr;
     }
 
-    // Traductor de fechas (DD/MM/YYYY)
     function convertirFechaParaOrdenar(fechaStr) {
         if (!fechaStr) return 0;
         const partes = fechaStr.split('/');
@@ -497,8 +495,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const filas = parsearCSV(texto);
             filas.shift(); // Borramos la cabecera
 
-            // 1. Filtramos (Asumimos 6 columnas: Fecha, Categoría, Título, Resumen, Foto, Enlace)
-            const filasValidas = filas.filter(col => col.length >= 6 && col[0].trim() !== '');
+            // 1. Filtramos (Ahora verificamos que tenga al menos 4 columnas para que no falle)
+            const filasValidas = filas.filter(col => col.length >= 4 && col[0].trim() !== '');
 
             // 2. Ordenamos por fecha de más reciente a más antigua
             filasValidas.sort((a, b) => {
@@ -513,17 +511,17 @@ document.addEventListener('DOMContentLoaded', () => {
             contenedor.innerHTML = ''; 
 
             lasTresUltimas.forEach(col => {
-                // Extraemos los datos exactos
-                const fecha = col[0];
-                const titulo = col[2];
-                const foto = col[3];
-                const link = col[1];
+                // AQUÍ ESTÁ LA MAGIA CORREGIDA: Asignamos las columnas exactas de tu Excel
+                // 0:Fecha, 1:Link, 2:Titulo, 3:Foto, 4:Medio, 5:Modalidad
+                const enlace = col[1] ? col[1].trim() : '#';
+                const titulo = col[2] ? col[2].trim() : 'Sin título';
+                const foto = col[3] ? col[3].trim() : '';
                 
-                // Creamos la tarjeta (con target="_blank" para abrir en otra pestaña)
+                // Creamos la tarjeta asegurando que la imagen sea un círculo perfecto por CSS
                 const tarjeta = `
-                    <a href="${link}" target="_blank" class="news-item">
-                        <img src="${foto}" alt="${titulo}">
-                        <p>${titulo}</p>
+                    <a href="${enlace}" target="_blank" class="news-item" style="text-decoration: none;">
+                        <img src="${foto}" alt="${titulo}" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; margin: 0 auto; display: block; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                        <p style="margin-top: 15px; text-align: center; color: #333; font-weight: bold;">${titulo}</p>
                     </a>
                 `;
                 
