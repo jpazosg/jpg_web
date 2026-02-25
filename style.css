@@ -931,3 +931,69 @@ footer {
     .opinion-titulo-largo { font-size: 2rem; }
     .opinion-vista-larga { padding: 20px; }
 }
+
+/* =========================================================
+   --- ESTILOS PARA EL VISOR DE IMÁGENES (LIGHTBOX) --- 
+   ========================================================= */
+
+/* El fondo negro que cubre toda la pantalla */
+.modal {
+    display: none; /* Oculto por defecto */
+    position: fixed; 
+    z-index: 1000; /* Se pone encima de todo */
+    padding-top: 50px; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgba(0,0,0,0.9); /* Negro al 90% de opacidad */
+    align-items: center;
+    justify-content: center;
+}
+
+/* La imagen dentro del visor */
+.modal-contenido {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 900px; /* Que no sea gigante en pantallas enormes */
+    max-height: 85vh; /* Que quepa en la altura de la pantalla */
+    object-fit: contain;
+    border-radius: 4px;
+    box-shadow: 0 0 20px rgba(255,255,255,0.1);
+    animation: zoom 0.3s; /* Efecto de zoom al abrir */
+}
+
+/* Efecto de zoom */
+@keyframes zoom {
+    from {transform:scale(0)} 
+    to {transform:scale(1)}
+}
+
+/* El botón de Cerrar (X) */
+.cerrar-modal {
+    position: absolute;
+    top: 20px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+    cursor: pointer;
+    z-index: 1001;
+}
+
+.cerrar-modal:hover,
+.cerrar-modal:focus {
+    color: #ff0000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Adaptación para móviles */
+@media only screen and (max-width: 700px){
+    .modal-contenido {
+        width: 100%;
+    }
+}
