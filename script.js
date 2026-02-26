@@ -451,33 +451,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (contenedorAutobild) {
         const sheetURL = contenedorAutobild.getAttribute('data-sheet');
-        
         if (sheetURL && !sheetURL.includes("PEGA_AQUI")) {
             cargarUltimasAutobild(sheetURL, contenedorAutobild);
         }
     }
 
-    function parsearCSV(str) {
-        const arr = [];
-        let quote = false;
-        let row = 0, col = 0;
-        for (let c = 0; c < str.length; c++) {
-            let cc = str[c], nc = str[c+1];
-            arr[row] = arr[row] || [];
-            arr[row][col] = arr[row][col] || '';
-            
-            if (cc == '"' && quote && nc == '"') { arr[row][col] += cc; ++c; continue; }
-            if (cc == '"') { quote = !quote; continue; }
-            if (cc == ',' && !quote) { ++col; continue; }
-            if (cc == '\r' && nc == '\n' && !quote) { ++row; col = 0; ++c; continue; } 
-            if (cc == '\n' && !quote) { ++row; col = 0; continue; }
-            if (cc == '\r' && !quote) { ++row; col = 0; continue; }
-            
-            arr[row][col] += cc;
-        }
-        return arr;
-    }
-
+    // Traductor de fechas (DD/MM/YYYY) para poder ordenarlas
     function convertirFechaParaOrdenar(fechaStr) {
         if (!fechaStr) return 0;
         const partes = fechaStr.split('/');
@@ -492,36 +471,51 @@ document.addEventListener('DOMContentLoaded', () => {
             const respuesta = await fetch(url);
             const texto = await respuesta.text();
             
-            const filas = parsearCSV(texto);
-            filas.shift(); // Borramos la cabecera
+            // LECTOR CLÁSICO Y SEGURO (No rompe las URLs)
+            const filasRaw = texto.split('\n').slice(1); // Separamos por líneas y quitamos la cabecera
+            const filasValidas = [];
 
-            // 1. Filtramos (Ahora verificamos que tenga al menos 4 columnas para que no falle)
-            const filasValidas = filas.filter(col => col.length >= 4 && col[0].trim() !== '');
+            filasRaw.forEach(filaStr => {
+                if (!filaStr.trim()) return; // Si la línea está vacía, la saltamos
+                
+                // Cortamos las columnas respetando el formato de Google Sheets
+                const regex = /,(?=(?:(?:[^"]*"){2})*[^"]*$)/;
+                const col = filaStr.split(regex).map(val => val.replace(/^"|"$/g, '').trim());
+                
+                if (col.length >= 4) {
+                    filasValidas.push(col);
+                }
+            });
 
-            // 2. Ordenamos por fecha de más reciente a más antigua
+            // Ordenamos por fecha de más reciente a más antigua
             filasValidas.sort((a, b) => {
-                const fechaA = convertirFechaParaOrdenar(a[0].trim());
-                const fechaB = convertirFechaParaOrdenar(b[0].trim());
+                const fechaA = convertirFechaParaOrdenar(a[0]);
+                const fechaB = convertirFechaParaOrdenar(b[0]);
                 return fechaB - fechaA; 
             });
 
-            // 3. Nos quedamos con los 3 primeros
+            // Nos quedamos solo con las 3 primeras
             const lasTresUltimas = filasValidas.slice(0, 3);
-
             contenedor.innerHTML = ''; 
 
             lasTresUltimas.forEach(col => {
-                // AQUÍ ESTÁ LA MAGIA CORREGIDA: Asignamos las columnas exactas de tu Excel
-                // 0:Fecha, 1:Link, 2:Titulo, 3:Foto, 4:Medio, 5:Modalidad
-                const enlace = col[1] ? col[1].trim() : '#';
-                const titulo = col[2] ? col[2].trim() : 'Sin título';
-                const foto = col[3] ? col[3].trim() : '';
+                // TU EXCEL: 0:Fecha, 1:Link, 2:Titulo, 3:Foto, 4:Medio, 5:Modalidad
                 
-                // Creamos la tarjeta asegurando que la imagen sea un círculo perfecto por CSS
+                // Arreglamos el link por si le falta el "https://" (Esto evita el error 404 de GitHub)
+                let enlace = col[1] ? col[1] : '#';
+                if (enlace !== '#' && !enlace.startsWith('http')) {
+                    enlace = 'https://' + enlace;
+                }
+
+                const titulo = col[2] ? col[2] : 'Sin título';
+                const foto = col[3] ? col[3] : '';
+                
+                // He quitado los estilos forzados. Dejo que tu style.css haga el trabajo limpio.
+                // Si la foto falla por cualquier motivo, cargará el logo de tu web por defecto.
                 const tarjeta = `
-                    <a href="${enlace}" target="_blank" class="news-item" style="text-decoration: none;">
-                        <img src="${foto}" alt="${titulo}" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; margin: 0 auto; display: block; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-                        <p style="margin-top: 15px; text-align: center; color: #333; font-weight: bold;">${titulo}</p>
+                    <a href="${enlace}" target="_blank" class="news-item">
+                        <img src="${foto}" alt="${titulo}" onerror="this.src='img/logo.jpeg'">
+                        <p>${titulo}</p>
                     </a>
                 `;
                 
@@ -534,7 +528,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (error) {
             console.error("Error cargando AutoBild:", error);
-            contenedor.innerHTML = '<p style="text-align:center; width: 100%;">Error al cargar los artículos de AutoBild.</p>';
+            contenedor.innerHTML = '<p style="text-align:center; width: 100%;">Error al cargar los artículos.</p>';
         }
     }
 });
