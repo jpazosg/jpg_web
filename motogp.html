@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Noticias de MotoGP</title>
     <link rel="icon" href="img/logo.jpeg" type="image/jpeg">
+    <meta name="description" content="Portafolio de Javier Pazos Gurich. Artículos de opinión y noticias de deportes: F1, MotoGP, Fútbol y más.">
+    <meta property="og:title" content="Javier Pazos - Periodista Deportivo">
+    <meta property="og:description" content="Explora mis columnas de opinión y las últimas noticias del mundo del deporte.">
+    <meta property="og:image" content="https://TU_USUARIO.github.io/TU_REPOSITORIO/img/logo.jpeg">
+    <meta property="og:type" content="website">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -32,6 +37,11 @@
     <section class="tematicas-container">
         
         <div class="contenedor-filtros">
+            <div class="buscador-container">
+                <i class="fas fa-search"></i>
+                <input type="text" id="buscador-noticias" placeholder="Buscar noticia...">
+            </div>
+
             <label for="ordenar-noticias"><i class="fas fa-sort"></i> Ordenar por:</label>
             <select id="ordenar-noticias" class="select-ordenacion">
                 <option value="original">Orden de publicación original</option>
@@ -57,6 +67,8 @@
             <p class="copyright">&copy; 2026 Javier Pazos Gurich.</p>
         </div>
     </footer>
+
+    <button id="btn-volver-arriba" title="Volver arriba"><i class="fas fa-arrow-up"></i></button>
 
     <script src="script.js?v=7"></script>
 

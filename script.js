@@ -185,11 +185,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 const tarjeta = document.createElement('article');
                 tarjeta.classList.add('opinion-tarjeta');
                 
-                // AÑADIDO: Atributos para poder ordenar las columnas
+                // AÑADIDO: Atributos para poder ordenar las columnas y para el buscador
                 tarjeta.setAttribute('data-fecha', fecha);
                 tarjeta.setAttribute('data-titulo', titulo);
                 tarjeta.setAttribute('data-indice', index);
                 
+                // AÑADIDO loading="lazy" a la imagen de la vista larga para mejorar rendimiento
                 tarjeta.innerHTML = `
                     <div class="opinion-vista-corta" style="background-image: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.9)), url('${foto}');">
                         <span class="opinion-fecha-corta">${fecha}</span>
@@ -200,7 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <h1 class="opinion-titulo-largo">${titulo}</h1>
                         <span class="opinion-fecha-larga">${fecha}</span>
                         
-                        <img src="${foto}" alt="${titulo}" class="opinion-imagen-larga">
+                        <img src="${foto}" alt="${titulo}" class="opinion-imagen-larga" loading="lazy">
                         
                         <div class="opinion-texto-largo">${contenidoFormateado}</div>
                         
@@ -427,9 +428,10 @@ document.addEventListener('DOMContentLoaded', () => {
             lasTresUltimas.forEach(col => {
                 const [fecha, titulo, contenido, foto] = col;
                 
+                // AÑADIDO loading="lazy" a la imagen
                 const tarjeta = `
                     <a href="opinion.html" class="news-item">
-                        <img src="${foto}" alt="${titulo}">
+                        <img src="${foto}" alt="${titulo}" loading="lazy">
                         <p>${titulo}</p>
                     </a>
                 `;
@@ -517,11 +519,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 const titulo = col[2] ? col[2] : 'Sin título';
                 const foto = col[3] ? col[3] : '';
                 
-                // He quitado los estilos forzados. Dejo que tu style.css haga el trabajo limpio.
-                // Si la foto falla por cualquier motivo, cargará el logo de tu web por defecto.
+                // AÑADIDO loading="lazy" a la imagen
                 const tarjeta = `
                     <a href="${enlace}" target="_blank" class="news-item">
-                        <img src="${foto}" alt="${titulo}" onerror="this.src='img/logo.jpeg'">
+                        <img src="${foto}" alt="${titulo}" loading="lazy" onerror="this.src='img/logo.jpeg'">
                         <p>${titulo}</p>
                     </a>
                 `;
@@ -635,6 +636,60 @@ document.addEventListener('DOMContentLoaded', () => {
                 localStorage.setItem('modoPreferido', 'claro');
                 btnTema.innerHTML = '<i class="fas fa-moon"></i> Modo Oscuro';
             }
+        });
+    }
+});
+
+// =========================================================
+// --- LÓGICA DEL BUSCADOR EN TIEMPO REAL ---
+// =========================================================
+
+document.addEventListener('DOMContentLoaded', () => {
+    const buscador = document.getElementById('buscador-noticias');
+    const contenedorGrid = document.querySelector('.opiniones-grid, .grid-tarjetas');
+
+    if (buscador && contenedorGrid) {
+        buscador.addEventListener('input', (e) => {
+            const termino = e.target.value.toLowerCase();
+            // Cogemos todas las tarjetas que tengan el atributo data-titulo
+            const tarjetas = Array.from(contenedorGrid.children).filter(t => t.hasAttribute('data-titulo'));
+
+            tarjetas.forEach(tarjeta => {
+                const titulo = tarjeta.getAttribute('data-titulo').toLowerCase();
+                // Si el título incluye lo que hemos escrito, se muestra. Si no, se oculta.
+                if (titulo.includes(termino)) {
+                    tarjeta.style.display = '';
+                } else {
+                    tarjeta.style.display = 'none';
+                }
+            });
+        });
+    }
+});
+
+// =========================================================
+// --- LÓGICA DEL BOTÓN VOLVER ARRIBA ---
+// =========================================================
+
+document.addEventListener('DOMContentLoaded', () => {
+    const btnArriba = document.getElementById("btn-volver-arriba");
+
+    if (btnArriba) {
+        // Cuando el usuario hace scroll hacia abajo 300px, mostramos el botón
+        window.onscroll = function() {
+            if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+                btnArriba.style.display = "block";
+            } else {
+                btnArriba.style.display = "none";
+            }
+        };
+
+        // Al hacer clic, sube suavemente
+        btnArriba.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
         });
     }
 });
