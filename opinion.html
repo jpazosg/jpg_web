@@ -32,6 +32,17 @@
     </header>
 
     <main class="opiniones-container">
+
+        <div class="contenedor-filtros">
+            <label for="ordenar-noticias"><i class="fas fa-sort"></i> Ordenar por:</label>
+            <select id="ordenar-noticias" class="select-ordenacion">
+                <option value="original">Orden de publicación original</option>
+                <option value="fecha-desc">Más recientes primero</option>
+                <option value="fecha-asc">Más antiguas primero</option>
+                <option value="az">Alfabético (A - Z)</option>
+                <option value="za">Alfabético (Z - A)</option>
+            </select>
+        </div>
         
         <div class="opiniones-grid" 
              id="contenedor-opiniones" 
@@ -52,3 +63,4 @@
 </body>
 
 </html>
+
