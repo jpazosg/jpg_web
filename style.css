@@ -1191,4 +1191,15 @@ body.dark-mode .buscador-container input { color: #f1f1f1 !important; }
 
 #btn-volver-arriba:hover {
     background-color: #cc0000; transform: scale(1.1);
+
 }
+
+/* Color del logo de X (Twitter) */
+.icono-x { color: #000; }
+body.dark-mode .icono-x { color: #fff !important; }
+
+/* Fondo del contador de compartidos */
+body.dark-mode .fondo-contador { background: #333 !important; color: #ccc !important; }
+
+/* Animación al pasar el ratón por los botones sociales */
+.btn-share-social:hover { transform: scale(1.15); display: inline-block; }
