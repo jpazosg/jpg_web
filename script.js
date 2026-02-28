@@ -172,6 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- NUEVO PARSEADOR CSV ROBUSTO ---
+    // Esta función lee el Excel sin romperse por culpa de los párrafos largos
     function parsearCSV(str) {
         const arr = [];
         let quote = false;
@@ -198,20 +199,27 @@ document.addEventListener('DOMContentLoaded', () => {
             const respuesta = await fetch(url);
             const texto = await respuesta.text();
             
+            // Leemos el texto con nuestra nueva función y quitamos la cabecera
             const filas = parsearCSV(texto);
             filas.shift(); // Borra la fila 0 (Cabecera)
 
             contenedor.innerHTML = ''; 
 
+            // AÑADIDO: 'index' para el orden original
             filas.forEach((col, index) => {
+                // Si la fila está vacía o no tiene al menos 4 datos, se ignora
                 if (col.length < 4 || !col[0]) return; 
 
                 const [fecha, titulo, contenidoRaw, foto] = col;
+                
+                // Transforma los saltos de línea invisibles del Excel en párrafos web
                 const contenidoFormateado = contenidoRaw.replace(/\n/g, '<br><br>');
 
+                // Crear el elemento artículo
                 const tarjeta = document.createElement('article');
                 tarjeta.classList.add('opinion-tarjeta');
                 
+                // AÑADIDO: Atributos para poder ordenar las columnas y para el buscador
                 tarjeta.setAttribute('data-fecha', fecha);
                 tarjeta.setAttribute('data-titulo', titulo);
                 tarjeta.setAttribute('data-indice', index);
@@ -222,7 +230,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 // Lee el contador de compartidos de la memoria local
                 let compartidos = localStorage.getItem('shares_opinion_' + index) || 0;
-                
+
                 // AÑADIDO loading="lazy" a la imagen y BOTONES DE REDES SOCIALES
                 tarjeta.innerHTML = `
                     <div class="opinion-vista-corta" style="background-image: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.9)), url('${foto}');">
@@ -249,7 +257,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 
                                 <a href="https://www.linkedin.com/sharing/share-offsite/?url=${urlCompartir}" target="_blank" class="btn-share-social" style="color: #0A66C2; font-size: 1.6rem; transition: transform 0.2s;"><i class="fab fa-linkedin"></i></a>
                                 
-                                <button class="btn-share-social btn-instagram" style="background: none; border: none; color: #E1306C; font-size: 1.6rem; cursor: pointer; padding: 0; transition: transform 0.2s;" title="Copiar enlace para Instagram"><i class="fab fa-instagram"></i></button>
+                                <button class="btn-share-social btn-copy-link" style="background: none; border: none; color: #888; font-size: 1.6rem; cursor: pointer; padding: 0; transition: transform 0.2s;" title="Copiar enlace al portapapeles"><i class="fas fa-link"></i></button>
                             </div>
 
                             <div style="font-size: 0.9rem; color: #888; font-weight: bold; background: #f5f5f5; padding: 5px 12px; border-radius: 15px;" class="fondo-contador">
@@ -262,12 +270,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 `;
 
-                // --- Lógica del Contador y de Instagram ---
+                // --- Lógica del Contador y de Copiar Enlace ---
                 const botonesShare = tarjeta.querySelectorAll('.btn-share-social');
                 const contadorNum = tarjeta.querySelector('.share-counter-num');
-                const btnInstagram = tarjeta.querySelector('.btn-instagram');
+                const btnCopy = tarjeta.querySelector('.btn-copy-link');
 
-                // Sumar al contador al hacer clic
+                // Sumar al contador al hacer clic en cualquier red social
                 botonesShare.forEach(btn => {
                     btn.addEventListener('click', () => {
                         let actual = parseInt(localStorage.getItem('shares_opinion_' + index) || 0);
@@ -277,12 +285,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                 });
 
-                // Copiar enlace en Instagram
-                if (btnInstagram) {
-                    btnInstagram.addEventListener('click', (e) => {
+                // Copiar enlace al portapapeles
+                if (btnCopy) {
+                    btnCopy.addEventListener('click', (e) => {
                         e.preventDefault();
                         navigator.clipboard.writeText(window.location.href).then(() => {
-                            alert("¡Enlace copiado al portapapeles!\nYa puedes pegarlo en tu historia o biografía de Instagram.");
+                            alert("¡Enlace copiado al portapapeles!\nYa puedes pegarlo donde quieras.");
                         });
                     });
                 }
@@ -427,6 +435,194 @@ document.addEventListener('DOMContentLoaded', () => {
             currentX = 0;
             currentY = 0;
             modalImg.style.transform = "translate(0px, 0px) scale(1)";
+        }
+    }
+});
+
+// =========================================================
+// --- LÓGICA PARA LAS 3 ÚLTIMAS OPINIONES EN LA PORTADA ---
+// =========================================================
+
+document.addEventListener('DOMContentLoaded', () => {
+    
+    const contenedorUltimas = document.getElementById('ultimas-opiniones');
+
+    if (contenedorUltimas) {
+        const sheetURL = contenedorUltimas.getAttribute('data-sheet');
+        
+        if (sheetURL && !sheetURL.includes("PEGA_AQUI")) {
+            cargarUltimasOpiniones(sheetURL, contenedorUltimas);
+        }
+    }
+
+    function parsearCSV(str) {
+        const arr = [];
+        let quote = false;
+        let row = 0, col = 0;
+        for (let c = 0; c < str.length; c++) {
+            let cc = str[c], nc = str[c+1];
+            arr[row] = arr[row] || [];
+            arr[row][col] = arr[row][col] || '';
+            
+            if (cc == '"' && quote && nc == '"') { arr[row][col] += cc; ++c; continue; }
+            if (cc == '"') { quote = !quote; continue; }
+            if (cc == ',' && !quote) { ++col; continue; }
+            if (cc == '\r' && nc == '\n' && !quote) { ++row; col = 0; ++c; continue; } 
+            if (cc == '\n' && !quote) { ++row; col = 0; continue; }
+            if (cc == '\r' && !quote) { ++row; col = 0; continue; }
+            
+            arr[row][col] += cc;
+        }
+        return arr;
+    }
+
+    // Función para que el navegador entienda las fechas (DD/MM/YYYY)
+    function convertirFechaParaOrdenar(fechaStr) {
+        if (!fechaStr) return 0;
+        const partes = fechaStr.split('/');
+        if (partes.length === 3) {
+            // JavaScript lee los meses del 0 al 11, por eso restamos 1 al mes
+            return new Date(partes[2], partes[1] - 1, partes[0]).getTime();
+        }
+        // Por si alguna vez escribes la fecha en otro formato
+        return new Date(fechaStr).getTime() || 0;
+    }
+
+    async function cargarUltimasOpiniones(url, contenedor) {
+        try {
+            const respuesta = await fetch(url);
+            const texto = await respuesta.text();
+            
+            const filas = parsearCSV(texto);
+            filas.shift(); // Borramos la cabecera (Fila 1)
+
+            // 1. Filtramos las válidas
+            const filasValidas = filas.filter(col => col.length >= 4 && col[0].trim() !== '');
+
+            // Ordenamos todas las filas por fecha (de más reciente a más antigua)
+            filasValidas.sort((a, b) => {
+                const fechaA = convertirFechaParaOrdenar(a[0].trim());
+                const fechaB = convertirFechaParaOrdenar(b[0].trim());
+                return fechaB - fechaA; // Orden descendente
+            });
+
+            // 2. Extraemos ÚNICAMENTE las 3 primeras después de haberlas ordenado
+            const lasTresUltimas = filasValidas.slice(0, 3);
+
+            contenedor.innerHTML = ''; 
+
+            lasTresUltimas.forEach(col => {
+                const [fecha, titulo, contenido, foto] = col;
+                
+                // AÑADIDO loading="lazy" a la imagen
+                const tarjeta = `
+                    <a href="opinion.html" class="news-item">
+                        <img src="${foto}" alt="${titulo}" loading="lazy">
+                        <p>${titulo}</p>
+                    </a>
+                `;
+                
+                contenedor.innerHTML += tarjeta;
+            });
+
+            if (contenedor.innerHTML === '') {
+                contenedor.innerHTML = '<p style="text-align:center; width: 100%;">No hay columnas recientes.</p>';
+            }
+
+        } catch (error) {
+            console.error("Error cargando últimas opiniones:", error);
+            contenedor.innerHTML = '<p style="text-align:center; width: 100%;">Error al cargar las columnas de opinión.</p>';
+        }
+    }
+});
+
+// =========================================================
+// --- LÓGICA PARA LOS 3 ÚLTIMOS ARTÍCULOS DE AUTOBILD ---
+// =========================================================
+
+document.addEventListener('DOMContentLoaded', () => {
+    
+    const contenedorAutobild = document.getElementById('ultimas-autobild');
+
+    if (contenedorAutobild) {
+        const sheetURL = contenedorAutobild.getAttribute('data-sheet');
+        if (sheetURL && !sheetURL.includes("PEGA_AQUI")) {
+            cargarUltimasAutobild(sheetURL, contenedorAutobild);
+        }
+    }
+
+    // Traductor de fechas (DD/MM/YYYY) para poder ordenarlas
+    function convertirFechaParaOrdenar(fechaStr) {
+        if (!fechaStr) return 0;
+        const partes = fechaStr.split('/');
+        if (partes.length === 3) {
+            return new Date(partes[2], partes[1] - 1, partes[0]).getTime();
+        }
+        return new Date(fechaStr).getTime() || 0;
+    }
+
+    async function cargarUltimasAutobild(url, contenedor) {
+        try {
+            const respuesta = await fetch(url);
+            const texto = await respuesta.text();
+            
+            // LECTOR CLÁSICO Y SEGURO (No rompe las URLs)
+            const filasRaw = texto.split('\n').slice(1); // Separamos por líneas y quitamos la cabecera
+            const filasValidas = [];
+
+            filasRaw.forEach(filaStr => {
+                if (!filaStr.trim()) return; // Si la línea está vacía, la saltamos
+                
+                // Cortamos las columnas respetando el formato de Google Sheets
+                const regex = /,(?=(?:(?:[^"]*"){2})*[^"]*$)/;
+                const col = filaStr.split(regex).map(val => val.replace(/^"|"$/g, '').trim());
+                
+                if (col.length >= 4) {
+                    filasValidas.push(col);
+                }
+            });
+
+            // Ordenamos por fecha de más reciente a más antigua
+            filasValidas.sort((a, b) => {
+                const fechaA = convertirFechaParaOrdenar(a[0]);
+                const fechaB = convertirFechaParaOrdenar(b[0]);
+                return fechaB - fechaA; 
+            });
+
+            // Nos quedamos solo con las 3 primeras
+            const lasTresUltimas = filasValidas.slice(0, 3);
+            contenedor.innerHTML = ''; 
+
+            lasTresUltimas.forEach(col => {
+                // TU EXCEL: 0:Fecha, 1:Link, 2:Titulo, 3:Foto, 4:Medio, 5:Modalidad
+                
+                // Arreglamos el link por si le falta el "https://" (Esto evita el error 404 de GitHub)
+                let enlace = col[1] ? col[1] : '#';
+                if (enlace !== '#' && !enlace.startsWith('http')) {
+                    enlace = 'https://' + enlace;
+                }
+
+                const titulo = col[2] ? col[2] : 'Sin título';
+                const foto = col[3] ? col[3] : '';
+                
+                // AÑADIDO loading="lazy" a la imagen
+                const tarjeta = `
+                    <a href="${enlace}" target="_blank" class="news-item">
+                        <img src="${foto}" alt="${titulo}" loading="lazy" onerror="this.src='img/logo.jpeg'">
+                        <p>${titulo}</p>
+                    </a>
+                `;
+                
+                contenedor.innerHTML += tarjeta;
+            });
+
+            if (contenedor.innerHTML === '') {
+                contenedor.innerHTML = '<p style="text-align:center; width: 100%;">No hay artículos recientes.</p>';
+            }
+
+        } catch (error) {
+            console.error("Error cargando AutoBild:", error);
+            contenedor.innerHTML = '<p style="text-align:center; width: 100%;">Error al cargar los artículos.</p>';
         }
     }
 });
