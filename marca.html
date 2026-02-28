@@ -26,16 +26,28 @@
     </nav>
 
     <header class="page-header" style="text-align:center; padding: 3rem 1rem; background: #eee;">
-        <h1 id="titulo-pagina">NOTICIAS MARCA</h1> </header>
+        <h1 id="titulo-pagina">NOTICIAS MARCA</h1> 
+    </header>
 
     <section class="tematicas-container">
         
+        <div class="contenedor-filtros">
+            <label for="ordenar-noticias"><i class="fas fa-sort"></i> Ordenar por:</label>
+            <select id="ordenar-noticias" class="select-ordenacion">
+                <option value="original">Orden de publicación original</option>
+                <option value="fecha-desc">Más recientes primero</option>
+                <option value="fecha-asc">Más antiguas primero</option>
+                <option value="az">Alfabético (A - Z)</option>
+                <option value="za">Alfabético (Z - A)</option>
+            </select>
+        </div>
+
         <div class="grid-tarjetas" 
              id="contenedor-dinamico" 
              data-sheet="https://docs.google.com/spreadsheets/d/e/2PACX-1vQbkJtXg5k9agS5Xg980Sjpw9TlA8SuEc5BsaN2V1rqWQmM8Jdi7uBIefDrpzw0nT1dw_6KnaOfjO3U/pub?output=csv"
              data-medio="MARCA">
              
-             <p>Cargando noticias...</p>
+             <p style="text-align:center; width: 100%;">Cargando noticias...</p>
         </div>
 
     </section>
@@ -46,7 +58,7 @@
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script src="script.js?v=6"></script>
 
 </body>
 </html>
