@@ -1062,3 +1062,93 @@ footer {
     border-color: #ff0000;
     outline: none;
 }
+
+/* =========================================================
+   --- MODO OSCURO (CORREGIDO Y AMPLIADO) --- 
+   ========================================================= */
+
+/* Fondo general y texto base */
+body.dark-mode {
+    background-color: #121212 !important;
+    color: #e0e0e0 !important;
+}
+
+/* 1. SECCIONES REBELDES (Sobre mí, Temáticas, etc.) */
+/* Forzamos a que cualquier sección que tuviera fondo gris o blanco se vuelva oscura */
+body.dark-mode section,
+body.dark-mode .editorial-section,
+body.dark-mode .tematicas-container,
+body.dark-mode #sobre-mi,
+body.dark-mode .sobre-mi-container,
+body.dark-mode .seccion-clara {
+    background-color: #121212 !important;
+    color: #e0e0e0 !important;
+}
+
+/* 2. CABECERAS DE PÁGINA (Ej: NOTICIAS F1) */
+body.dark-mode .page-header {
+    background-color: #1a1a1a !important;
+    color: #ffffff !important;
+}
+body.dark-mode .page-header h1 {
+    color: #ffffff !important;
+}
+
+/* 3. ARREGLO DE LOS RECUADROS DETRÁS DE LAS TARJETAS REDONDAS */
+/* Quitamos el fondo blanco y la sombra que hacía el "cuadrado feo" */
+body.dark-mode .news-item {
+    background-color: transparent !important; 
+    box-shadow: none !important;
+    border: none !important;
+}
+
+/* Aseguramos que los textos debajo de las tarjetas redondas se lean bien */
+body.dark-mode .news-item p {
+    color: #f1f1f1 !important;
+}
+
+/* 4. TARJETAS DE OPINIÓN Y ARTÍCULOS DESPLEGADOS */
+body.dark-mode .opinion-card,
+body.dark-mode .opinion-tarjeta,
+body.dark-mode .opinion-vista-larga {
+    background-color: #1e1e1e !important;
+    color: #f1f1f1 !important;
+    border: 1px solid #333 !important;
+    /* Cambiamos la sombra clara por una sombra negra elegante */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.8) !important; 
+}
+
+/* Títulos generales */
+body.dark-mode h1, 
+body.dark-mode h2, 
+body.dark-mode h3 {
+    color: #ffffff !important;
+}
+
+/* Textos largos de los artículos de opinión */
+body.dark-mode .opinion-texto-largo {
+    color: #dcdcdc !important;
+}
+body.dark-mode .opinion-titulo-largo {
+    color: #ffffff !important;
+}
+
+/* 5. MENÚ DESPLEGABLE OSCURO */
+body.dark-mode .nav-dropdown {
+    background-color: #1a1a1a !important;
+    border-top: 1px solid #333 !important;
+}
+body.dark-mode .nav-dropdown a {
+    color: #f1f1f1 !important;
+}
+body.dark-mode .nav-dropdown a:hover {
+    background-color: #333 !important;
+}
+
+/* 6. LÍNEAS SEPARADORAS */
+/* Oscurecemos los <hr> para que no brillen en blanco */
+body.dark-mode hr, 
+body.dark-mode .separator {
+    border-color: #333 !important;
+    background-color: #333 !important;
+}

@@ -598,3 +598,43 @@ document.addEventListener('DOMContentLoaded', () => {
         return new Date(fechaStr).getTime() || 0;
     }
 });
+
+// =========================================================
+// --- LÓGICA PARA EL MODO OSCURO / CLARO ---
+// =========================================================
+
+document.addEventListener('DOMContentLoaded', () => {
+    const btnTema = document.getElementById('btn-tema');
+    const body = document.body;
+
+    // 1. Al cargar la página, comprobamos si el usuario ya había elegido el modo oscuro antes
+    const temaGuardado = localStorage.getItem('modoPreferido');
+    
+    if (temaGuardado === 'oscuro') {
+        body.classList.add('dark-mode');
+        // Si hay botón en esta página, le cambiamos el icono y el texto
+        if (btnTema) {
+            btnTema.innerHTML = '<i class="fas fa-sun"></i> Modo Claro';
+        }
+    }
+
+    // 2. Qué pasa cuando hacemos clic en el botón
+    if (btnTema) {
+        btnTema.addEventListener('click', (e) => {
+            e.preventDefault(); // Evita que la página salte hacia arriba al hacer clic
+            
+            // Ponemos o quitamos la clase 'dark-mode'
+            body.classList.toggle('dark-mode');
+            
+            // Si después del clic está oscuro, guardamos 'oscuro' y cambiamos icono
+            if (body.classList.contains('dark-mode')) {
+                localStorage.setItem('modoPreferido', 'oscuro');
+                btnTema.innerHTML = '<i class="fas fa-sun"></i> Modo Claro';
+            } else {
+                // Si está claro, guardamos 'claro' y ponemos la luna
+                localStorage.setItem('modoPreferido', 'claro');
+                btnTema.innerHTML = '<i class="fas fa-moon"></i> Modo Oscuro';
+            }
+        });
+    }
+});
