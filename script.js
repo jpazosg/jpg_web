@@ -1,5 +1,39 @@
 document.addEventListener('DOMContentLoaded', () => {
     
+    // =========================================================
+    // --- 0. INYECCIÓN DINÁMICA DE MENÚ Y FOOTER (MEJORA 3) ---
+    // =========================================================
+    const navbarDiv = document.getElementById('navbar-dinamico');
+    const footerDiv = document.getElementById('footer-dinamico');
+
+    if (navbarDiv) {
+        navbarDiv.innerHTML = `
+        <nav class="navbar">
+            <div class="nav-center">
+                <a href="index.html" class="nav-title">
+                    <img src="img/logo.jpeg" alt="Logo" class="nav-logo">
+                    INICIO
+                </a>
+            </div>
+            <div class="menu-toggle" id="mobile-menu">
+                <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+            </div>
+            <ul class="nav-dropdown" id="nav-dropdown">
+                <li><a href="index.html">Volver al Inicio</a></li>
+                <li><a href="#" id="btn-tema"><i class="fas fa-moon"></i> Modo Oscuro</a></li>
+            </ul>
+        </nav>`;
+    }
+
+    if (footerDiv) {
+        footerDiv.innerHTML = `
+        <footer id="contacto">
+            <div class="footer-content">
+                <p class="copyright">&copy; 2026 Javier Pazos Gurich. Todos los derechos reservados.</p>
+            </div>
+        </footer>`;
+    }
+
     // --- 1. MENÚ HAMBURGUESA ---
     const menuToggle = document.querySelector('.menu-toggle');
     const navDropdown = document.querySelector('.nav-dropdown');
@@ -190,7 +224,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 tarjeta.setAttribute('data-titulo', titulo);
                 tarjeta.setAttribute('data-indice', index);
                 
-                // AÑADIDO loading="lazy" a la imagen de la vista larga para mejorar rendimiento
+                // AÑADIDO loading="lazy" a la imagen y BOTONES DE REDES SOCIALES (MEJORA 2)
                 tarjeta.innerHTML = `
                     <div class="opinion-vista-corta" style="background-image: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.9)), url('${foto}');">
                         <span class="opinion-fecha-corta">${fecha}</span>
@@ -205,7 +239,13 @@ document.addEventListener('DOMContentLoaded', () => {
                         
                         <div class="opinion-texto-largo">${contenidoFormateado}</div>
                         
-                        <button class="btn-cerrar-articulo">Cerrar Artículo</button>
+                        <div style="margin-top: 30px; border-top: 1px solid #ddd; padding-top: 20px; display: flex; align-items: center; gap: 15px;">
+                            <span style="font-weight: bold; color: #666; font-size: 0.9rem; text-transform: uppercase;">Compartir:</span>
+                            <a href="https://api.whatsapp.com/send?text=Interesante artículo: ${encodeURIComponent(titulo)} - ${encodeURIComponent(window.location.href)}" target="_blank" style="color: #25D366; font-size: 1.8rem; transition: transform 0.3s;"><i class="fab fa-whatsapp"></i></a>
+                            <a href="https://twitter.com/intent/tweet?text=${encodeURIComponent(titulo)}&url=${encodeURIComponent(window.location.href)}" target="_blank" style="color: #1DA1F2; font-size: 1.8rem; transition: transform 0.3s;"><i class="fab fa-twitter"></i></a>
+                        </div>
+                        
+                        <button class="btn-cerrar-articulo" style="margin-top: 30px;">Cerrar Artículo</button>
                     </div>
                 `;
 
