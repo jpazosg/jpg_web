@@ -1024,3 +1024,41 @@ footer {
 .modal {
     overflow: hidden; /* Si hacemos mucho zoom, que no se salgan las barras de scroll */
 }
+
+/* =========================================================
+   --- ESTILOS PARA EL MENÚ DE ORDENACIÓN --- 
+   ========================================================= */
+
+.contenedor-filtros {
+    max-width: 1200px;
+    margin: 0 auto 2rem auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: flex-end; /* Lo alinea a la derecha */
+    align-items: center;
+    gap: 15px;
+}
+
+.contenedor-filtros label {
+    color: #666;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+}
+
+.select-ordenacion {
+    padding: 10px 15px;
+    font-size: 1rem;
+    background-color: #111;
+    color: white;
+    border: 1px solid #333;
+    border-radius: 4px;
+    font-family: 'Times New Roman', Times, serif;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+}
+
+.select-ordenacion:hover, .select-ordenacion:focus {
+    border-color: #ff0000;
+    outline: none;
+}
