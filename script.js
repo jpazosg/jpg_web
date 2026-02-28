@@ -51,7 +51,8 @@ async function cargarNoticias(url, filtroMedio, filtroModalidad, contenedor) {
 
         contenedor.innerHTML = ''; 
 
-        filas.forEach(filaRaw => {
+        // AÑADIDO: 'index' para saber el orden original
+        filas.forEach((filaRaw, index) => {
             // Regex para respetar comas dentro de comillas
             const regex = /,(?=(?:(?:[^"]*"){2})*[^"]*$)/;
             const col = filaRaw.split(regex).map(val => val.replace(/^"|"$/g, '').trim());
@@ -71,14 +72,14 @@ async function cargarNoticias(url, filtroMedio, filtroModalidad, contenedor) {
             }
 
             // 2. Si la página pide Modalidad, comprobamos la columna 5 (modalidad)
-            // Usamos 'includes' por si en el excel pusiste "F1 " con un espacio sin querer
             if (filtroModalidad && modalidad && modalidad.toUpperCase().includes(filtroModalidad.toUpperCase())) {
                 mostrar = true;
             }
 
             if (mostrar) {
+                // AÑADIDO: data-fecha, data-titulo y data-indice
                 const tarjeta = `
-                    <a href="${link}" target="_blank" class="tarjeta tarjeta-dinamica" style="background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('${foto}');">
+                    <a href="${link}" target="_blank" class="tarjeta tarjeta-dinamica" data-fecha="${fecha}" data-titulo="${titulo}" data-indice="${index}" style="background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('${foto}');">
                         <div class="contenido-tarjeta-dinamica">
                             <span class="fecha-tarjeta">${fecha}</span>
                             <h3 class="titulo-tarjeta">${titulo}</h3>
@@ -170,7 +171,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             contenedor.innerHTML = ''; 
 
-            filas.forEach(col => {
+            // AÑADIDO: 'index' para el orden original
+            filas.forEach((col, index) => {
                 // Si la fila está vacía o no tiene al menos 4 datos, se ignora
                 if (col.length < 4 || !col[0]) return; 
 
@@ -182,6 +184,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Crear el elemento artículo
                 const tarjeta = document.createElement('article');
                 tarjeta.classList.add('opinion-tarjeta');
+                
+                // AÑADIDO: Atributos para poder ordenar las columnas
+                tarjeta.setAttribute('data-fecha', fecha);
+                tarjeta.setAttribute('data-titulo', titulo);
+                tarjeta.setAttribute('data-indice', index);
                 
                 tarjeta.innerHTML = `
                     <div class="opinion-vista-corta" style="background-image: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.9)), url('${foto}');">
@@ -382,7 +389,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return arr;
     }
 
-    // --- NUEVO: Función para que el navegador entienda las fechas (DD/MM/YYYY) ---
+    // Función para que el navegador entienda las fechas (DD/MM/YYYY)
     function convertirFechaParaOrdenar(fechaStr) {
         if (!fechaStr) return 0;
         const partes = fechaStr.split('/');
@@ -405,7 +412,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // 1. Filtramos las válidas
             const filasValidas = filas.filter(col => col.length >= 4 && col[0].trim() !== '');
 
-            // --- NUEVO: Ordenamos todas las filas por fecha (de más reciente a más antigua) ---
+            // Ordenamos todas las filas por fecha (de más reciente a más antigua)
             filasValidas.sort((a, b) => {
                 const fechaA = convertirFechaParaOrdenar(a[0].trim());
                 const fechaB = convertirFechaParaOrdenar(b[0].trim());
@@ -530,5 +537,64 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error("Error cargando AutoBild:", error);
             contenedor.innerHTML = '<p style="text-align:center; width: 100%;">Error al cargar los artículos.</p>';
         }
+    }
+});
+
+// =========================================================
+// --- LÓGICA UNIVERSAL DE ORDENACIÓN DE TARJETAS ---
+// =========================================================
+
+document.addEventListener('DOMContentLoaded', () => {
+    const selectOrden = document.getElementById('ordenar-noticias');
+    // Buscamos el contenedor (sirve tanto para .opiniones-grid como para .grid-tarjetas)
+    const contenedorGrid = document.querySelector('.opiniones-grid, .grid-tarjetas');
+
+    if (selectOrden && contenedorGrid) {
+        selectOrden.addEventListener('change', (e) => {
+            const modo = e.target.value;
+            
+            // Obtenemos solo las tarjetas (ignorando los textos de "Cargando...")
+            const tarjetas = Array.from(contenedorGrid.children).filter(t => t.hasAttribute('data-fecha'));
+
+            if (tarjetas.length === 0) return;
+
+            // Ordenamos el array de tarjetas
+            tarjetas.sort((a, b) => {
+                // 1. ORDEN ORIGINAL
+                if (modo === 'original') {
+                    return parseInt(a.getAttribute('data-indice')) - parseInt(b.getAttribute('data-indice'));
+                }
+                
+                // 2. ORDEN POR FECHA
+                if (modo === 'fecha-desc' || modo === 'fecha-asc') {
+                    const fechaA = convertirFechaParaOrdenar(a.getAttribute('data-fecha'));
+                    const fechaB = convertirFechaParaOrdenar(b.getAttribute('data-fecha'));
+                    return modo === 'fecha-desc' ? fechaB - fechaA : fechaA - fechaB;
+                }
+                
+                // 3. ORDEN ALFABÉTICO
+                if (modo === 'az' || modo === 'za') {
+                    const tituloA = a.getAttribute('data-titulo').toLowerCase();
+                    const tituloB = b.getAttribute('data-titulo').toLowerCase();
+                    if (tituloA < tituloB) return modo === 'az' ? -1 : 1;
+                    if (tituloA > tituloB) return modo === 'az' ? 1 : -1;
+                    return 0;
+                }
+            });
+
+            // Vaciamos el contenedor y metemos las tarjetas ya ordenadas
+            contenedorGrid.innerHTML = '';
+            tarjetas.forEach(t => contenedorGrid.appendChild(t));
+        });
+    }
+
+    // Traductor de fechas (DD/MM/YYYY) interno para este bloque
+    function convertirFechaParaOrdenar(fechaStr) {
+        if (!fechaStr) return 0;
+        const partes = fechaStr.split('/');
+        if (partes.length === 3) {
+            return new Date(partes[2], partes[1] - 1, partes[0]).getTime();
+        }
+        return new Date(fechaStr).getTime() || 0;
     }
 });
