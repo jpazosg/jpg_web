@@ -1203,3 +1203,68 @@ body.dark-mode .fondo-contador { background: #333 !important; color: #ccc !impor
 
 /* Animación al pasar el ratón por los botones sociales */
 .btn-share-social:hover { transform: scale(1.15); display: inline-block; }
+
+/* =========================================================
+   --- MEJORA: PAGINACIÓN DE TARJETAS --- 
+   ========================================================= */
+
+/* Clases maestras para ocultar tarjetas sin romper el grid */
+.oculto-busqueda, 
+.oculto-paginacion {
+    display: none !important;
+}
+
+/* Contenedor de los botones de página */
+.paginacion-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin: 40px auto;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+/* Diseño de cada botón individual */
+.paginacion-btn {
+    background-color: #222;
+    color: #fff;
+    border: 1px solid #444;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.paginacion-btn:hover:not(:disabled) {
+    background-color: #ff0000;
+    border-color: #ff0000;
+    transform: translateY(-2px);
+}
+
+.paginacion-btn.activo {
+    background-color: #ff0000;
+    border-color: #ff0000;
+    font-weight: bold;
+}
+
+/* Botones bloqueados (ej: 'Anterior' estando en la pág 1) */
+.paginacion-btn:disabled {
+    background-color: #111;
+    color: #555;
+    border-color: #222;
+    cursor: not-allowed;
+}
+
+/* Adaptación al Modo Oscuro */
+body.dark-mode .paginacion-btn {
+    background-color: #1a1a1a;
+    border-color: #333;
+}
+body.dark-mode .paginacion-btn.activo,
+body.dark-mode .paginacion-btn:hover:not(:disabled) {
+    background-color: #ff0000;
+    border-color: #ff0000;
+}
