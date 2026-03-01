@@ -342,7 +342,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 e.preventDefault();
                 modal.style.display = "flex"; // Usa flex para centrar con el CSS nuevo
                 modalImg.src = this.src;
-                if(captionText) captionText.innerHTML = this.alt;
+                if(captionText) captionText.innerHTML = "";
                 resetZoom();
             });
         });
