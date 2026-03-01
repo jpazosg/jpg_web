@@ -1269,3 +1269,32 @@ body.dark-mode .nav-dropdown::-webkit-scrollbar-thumb {
         width: 300px; /* Tamaño fijo en ordenador */
     }
 }
+
+/* =========================================================
+   --- FIX: VISOR DE IMÁGENES PANTALLA COMPLETA --- 
+   ========================================================= */
+#visor-modal {
+    display: none; 
+    align-items: center; /* Centra la foto verticalmente */
+    justify-content: center; /* Centra la foto horizontalmente */
+    position: fixed; 
+    z-index: 9999; 
+    left: 0; 
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    background-color: rgba(0,0,0,0.95);
+}
+
+#img-full {
+    max-width: 95vw !important;  /* Máximo 95% del ancho de la pantalla */
+    max-height: 90vh !important; /* Máximo 90% del alto de la pantalla */
+    object-fit: contain; /* Obliga a la imagen a encajar sin deformarse ni cortarse */
+    cursor: grab;
+    transition: transform 0.1s ease; /* Zoom suave */
+}
+
+#img-full.arrastrando {
+    cursor: grabbing;
+    transition: none !important; /* Quita el retardo al arrastrar para que sea fluido */
+}
