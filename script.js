@@ -324,114 +324,87 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // =========================================================
-// --- LÓGICA DEL VISOR CON ZOOM Y ARRASTRE (PROFESIONAL) ---
+// --- LÓGICA DEL VISOR CON ZOOM Y ARRASTRE (MEJORADO + TÁCTIL) ---
 // =========================================================
 
 document.addEventListener('DOMContentLoaded', () => {
-    
     const modal = document.getElementById("visor-modal");
     const modalImg = document.getElementById("img-full");
     const captionText = document.getElementById("modal-caption");
     const spanCerrar = document.getElementsByClassName("cerrar-modal")[0];
-    
-    // Asegúrate de que tus fotos en papel.html tengan la clase "papel-img"
     const imagenes = document.querySelectorAll('.papel-img');
 
-    // Variables para controlar el zoom y la posición
-    let escalaActual = 1;
-    let currentX = 0;
-    let currentY = 0;
-    let isDragging = false;
-    let startX, startY;
+    let escalaActual = 1, currentX = 0, currentY = 0, isDragging = false, startX, startY;
 
     if (modal && modalImg) {
-        
-        // --- FUNCIÓN PARA ABRIR EL MODAL ---
         imagenes.forEach(img => {
-            img.addEventListener('click', function() {
-                modal.style.display = "flex";
+            img.addEventListener('click', function(e) {
+                e.preventDefault();
+                modal.style.display = "flex"; // Usa flex para centrar con el CSS nuevo
                 modalImg.src = this.src;
                 if(captionText) captionText.innerHTML = this.alt;
-                
-                // IMPORTANTE: Resetear el zoom cada vez que se abre una foto nueva
                 resetZoom();
             });
         });
 
-        // --- FUNCIÓN PARA CERRAR EL MODAL ---
-        function cerrarModal() {
-            modal.style.display = "none";
-            resetZoom(); // Reseteamos al cerrar por si acaso
-        }
-
+        function cerrarModal() { modal.style.display = "none"; resetZoom(); }
         if (spanCerrar) spanCerrar.onclick = cerrarModal;
-        
-        modal.onclick = function(event) {
-            // Solo cierra si hacemos clic en el fondo negro, no en la imagen
-            if (event.target === modal) cerrarModal();
-        }
+        modal.onclick = function(event) { if (event.target === modal) cerrarModal(); }
 
-        // --- LÓGICA DE ZOOM (RUEDA DEL RATÓN) ---
+        // --- LÓGICA DE ZOOM (Rueda del ratón) ---
         modal.addEventListener('wheel', function(e) {
-            e.preventDefault(); // Evita que la página haga scroll
-
-            // Calculamos la nueva escala (hacia arriba acerca, hacia abajo aleja)
-            const delta = e.deltaY * -0.001;
-            escalaActual += delta;
-
-            // Limitamos el zoom: Mínimo 1 (tamaño original), Máximo 5 veces más grande
-            escalaActual = Math.min(Math.max(1, escalaActual), 5);
-
-            // Si volvemos al tamaño original, reseteamos la posición
-            if (escalaActual === 1) {
-                currentX = 0;
-                currentY = 0;
-            }
-
+            e.preventDefault(); 
+            escalaActual += (e.deltaY * -0.001);
+            escalaActual = Math.min(Math.max(1, escalaActual), 5); // Límite de zoom entre 1x y 5x
+            if (escalaActual === 1) { currentX = 0; currentY = 0; }
             aplicarTransformacion();
         });
 
-        // --- LÓGICA DE ARRASTRAR (PANEO) ---
-        modalImg.addEventListener('mousedown', function(e) {
-            // Solo permitimos arrastrar si hay zoom (escala > 1)
+        // --- FUNCIONES DE ARRASTRE UNIVERSALES ---
+        function empezarArrastre(clientX, clientY) {
             if (escalaActual > 1) {
-                isDragging = true;
-                startX = e.clientX - currentX;
-                startY = e.clientY - currentY;
-                modalImg.classList.add('arrastrando'); // Cambia el cursor
-                e.preventDefault(); // Evita comportamientos raros del navegador
+                isDragging = true; 
+                startX = clientX - currentX; 
+                startY = clientY - currentY;
+                modalImg.classList.add('arrastrando'); 
             }
-        });
+        }
 
-        document.addEventListener('mousemove', function(e) {
-            if (isDragging) {
-                currentX = e.clientX - startX;
-                currentY = e.clientY - startY;
-                aplicarTransformacion();
+        function arrastrar(clientX, clientY) {
+            if (isDragging) { 
+                currentX = clientX - startX; 
+                currentY = clientY - startY; 
+                aplicarTransformacion(); 
             }
-        });
+        }
 
-        document.addEventListener('mouseup', function() {
-            if (isDragging) {
-                isDragging = false;
-                modalImg.classList.remove('arrastrando');
+        function soltarArrastre() {
+            if (isDragging) { 
+                isDragging = false; 
+                modalImg.classList.remove('arrastrando'); 
             }
-        });
+        }
 
-        // --- FUNCIONES AUXILIARES ---
+        // Eventos para Ratón (PC)
+        modalImg.addEventListener('mousedown', function(e) { e.preventDefault(); empezarArrastre(e.clientX, e.clientY); });
+        document.addEventListener('mousemove', function(e) { arrastrar(e.clientX, e.clientY); });
+        document.addEventListener('mouseup', soltarArrastre);
+
+        // Eventos Táctiles (Móviles)
+        modalImg.addEventListener('touchstart', function(e) { 
+            if (escalaActual > 1) e.preventDefault(); // Evita scroll nativo si hay zoom
+            empezarArrastre(e.touches[0].clientX, e.touches[0].clientY); 
+        }, { passive: false });
         
-        // Aplica los cambios de CSS a la imagen
-        function aplicarTransformacion() {
-            modalImg.style.transform = `translate(${currentX}px, ${currentY}px) scale(${escalaActual})`;
-        }
-
-        // Vuelve la imagen a su estado original
-        function resetZoom() {
-            escalaActual = 1;
-            currentX = 0;
-            currentY = 0;
-            modalImg.style.transform = "translate(0px, 0px) scale(1)";
-        }
+        document.addEventListener('touchmove', function(e) { 
+            if (isDragging) { e.preventDefault(); arrastrar(e.touches[0].clientX, e.touches[0].clientY); }
+        }, { passive: false });
+        
+        document.addEventListener('touchend', soltarArrastre);
+        
+        // --- FUNCIONES AUXILIARES ---
+        function aplicarTransformacion() { modalImg.style.transform = `translate(${currentX}px, ${currentY}px) scale(${escalaActual})`; }
+        function resetZoom() { escalaActual = 1; currentX = 0; currentY = 0; modalImg.style.transform = "translate(0px, 0px) scale(1)"; }
     }
 });
 
