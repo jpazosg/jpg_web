@@ -1268,3 +1268,38 @@ body.dark-mode .paginacion-btn:hover:not(:disabled) {
     background-color: #ff0000;
     border-color: #ff0000;
 }
+
+/* =========================================================
+   --- MEJORA: MENÚ DESPLEGABLE ADAPTABLE CON SCROLL --- 
+   ========================================================= */
+
+/* Para el menú en móviles (cuando está activo) */
+.nav-dropdown.active {
+    /* Calcula el 100% de la pantalla menos el espacio de la cabecera roja (aprox 80px) */
+    max-height: calc(100vh - 80px); 
+    overflow-y: auto; /* Activa el scroll interno automáticamente si no cabe */
+}
+
+/* Para el menú en ordenadores (si al pasar el ratón es muy largo) */
+@media (min-width: 769px) {
+    .nav-dropdown {
+        max-height: 75vh; /* Ocupa como máximo el 75% de la pantalla */
+        overflow-y: auto;
+    }
+}
+
+/* (Opcional) Estilo elegante para la barrita de scroll del menú */
+.nav-dropdown::-webkit-scrollbar {
+    width: 6px;
+}
+.nav-dropdown::-webkit-scrollbar-track {
+    background: transparent; /* Fondo invisible */
+}
+.nav-dropdown::-webkit-scrollbar-thumb {
+    background-color: #ff0000; /* La barrita en tu rojo corporativo */
+    border-radius: 10px;
+}
+
+body.dark-mode .nav-dropdown::-webkit-scrollbar-thumb {
+    background-color: #555; /* En modo oscuro, la barrita será gris oscuro */
+}
