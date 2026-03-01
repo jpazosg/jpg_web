@@ -1,8 +1,104 @@
-document.addEventListener('DOMContentLoaded', () => {
+// =========================================================
+// --- MOTOR DE PAGINACIÓN UNIVERSAL ---
+// =========================================================
+const ITEMS_POR_PAGINA = 12;
+
+function actualizarPaginacion(contenedor) {
+    if (!contenedor) return;
     
-    // =========================================================
-    // --- 0. INYECCIÓN DINÁMICA DE MENÚ Y FOOTER (MEJORA 3) ---
-    // =========================================================
+    // No paginamos las portadas
+    if (contenedor.id === 'ultimas-opiniones' || contenedor.id === 'ultimas-autobild') return;
+
+    // Filtramos para coger solo las tarjetas reales
+    const tarjetas = Array.from(contenedor.children).filter(t => 
+        t.hasAttribute('data-fecha') || t.classList.contains('tarjeta') || t.classList.contains('opinion-tarjeta')
+    );
+
+    if (tarjetas.length === 0) return;
+
+    // Calculamos las tarjetas que NO están ocultas por el buscador
+    const tarjetasVisibles = tarjetas.filter(t => !t.classList.contains('oculto-busqueda'));
+    const totalPaginas = Math.ceil(tarjetasVisibles.length / ITEMS_POR_PAGINA) || 1;
+    
+    // Recogemos en qué página estamos (por defecto la 1)
+    let paginaActual = parseInt(contenedor.getAttribute('data-pagina')) || 1;
+    if (paginaActual > totalPaginas) paginaActual = totalPaginas;
+    contenedor.setAttribute('data-pagina', paginaActual);
+
+    // Ocultar/Mostrar según la página en la que estemos
+    tarjetasVisibles.forEach((t, index) => {
+        const inicio = (paginaActual - 1) * ITEMS_POR_PAGINA;
+        const fin = paginaActual * ITEMS_POR_PAGINA;
+        
+        if (index >= inicio && index < fin) {
+            t.classList.remove('oculto-paginacion');
+        } else {
+            t.classList.add('oculto-paginacion');
+        }
+    });
+
+    // Nos aseguramos de ocultar por completo las excluidas por el buscador
+    tarjetas.forEach(t => {
+        if (t.classList.contains('oculto-busqueda')) {
+            t.classList.add('oculto-paginacion');
+        }
+    });
+
+    // Inyectar el menú de botones de paginación justo debajo de las tarjetas
+    let pagContainer = contenedor.nextElementSibling;
+    if (!pagContainer || !pagContainer.classList.contains('paginacion-container')) {
+        pagContainer = document.createElement('div');
+        pagContainer.className = 'paginacion-container';
+        contenedor.parentNode.insertBefore(pagContainer, contenedor.nextSibling);
+    }
+
+    pagContainer.innerHTML = ''; // Limpiamos botones viejos
+
+    if (totalPaginas <= 1) return; // Si hay 12 o menos noticias, no pintamos botones
+
+    // Botón Anterior
+    const btnPrev = document.createElement('button');
+    btnPrev.className = 'paginacion-btn';
+    btnPrev.innerHTML = '<i class="fas fa-chevron-left"></i>';
+    btnPrev.disabled = paginaActual === 1;
+    btnPrev.onclick = () => { 
+        contenedor.setAttribute('data-pagina', paginaActual - 1); 
+        actualizarPaginacion(contenedor); 
+        contenedor.scrollIntoView({behavior: 'smooth', block: 'start'}); 
+    };
+    pagContainer.appendChild(btnPrev);
+
+    // Botones de Números
+    for (let i = 1; i <= totalPaginas; i++) {
+        const btnNum = document.createElement('button');
+        btnNum.className = `paginacion-btn ${i === paginaActual ? 'activo' : ''}`;
+        btnNum.innerText = i;
+        btnNum.onclick = () => { 
+            contenedor.setAttribute('data-pagina', i); 
+            actualizarPaginacion(contenedor); 
+            contenedor.scrollIntoView({behavior: 'smooth', block: 'start'}); 
+        };
+        pagContainer.appendChild(btnNum);
+    }
+
+    // Botón Siguiente
+    const btnNext = document.createElement('button');
+    btnNext.className = 'paginacion-btn';
+    btnNext.innerHTML = '<i class="fas fa-chevron-right"></i>';
+    btnNext.disabled = paginaActual === totalPaginas;
+    btnNext.onclick = () => { 
+        contenedor.setAttribute('data-pagina', paginaActual + 1); 
+        actualizarPaginacion(contenedor); 
+        contenedor.scrollIntoView({behavior: 'smooth', block: 'start'}); 
+    };
+    pagContainer.appendChild(btnNext);
+}
+
+
+// =========================================================
+// --- 0. INYECCIÓN DINÁMICA DE MENÚ Y FOOTER ---
+// =========================================================
+document.addEventListener('DOMContentLoaded', () => {
     const navbarDiv = document.getElementById('navbar-dinamico');
     const footerDiv = document.getElementById('footer-dinamico');
 
@@ -34,7 +130,6 @@ document.addEventListener('DOMContentLoaded', () => {
         </footer>`;
     }
 
-    // --- 1. MENÚ HAMBURGUESA ---
     const menuToggle = document.querySelector('.menu-toggle');
     const navDropdown = document.querySelector('.nav-dropdown');
     
@@ -52,17 +147,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- 2. CARGA DE NOTICIAS (DINÁMICO) ---
     const contenedor = document.getElementById('contenedor-dinamico');
 
     if (contenedor) {
         const sheetURL = contenedor.getAttribute('data-sheet');
-        
-        // Detectamos qué tipo de filtro estamos usando
         const medioFiltro = contenedor.getAttribute('data-medio');
         const modalidadFiltro = contenedor.getAttribute('data-modalidad');
         
-        // Ponemos el título automáticamente
         const tituloPagina = document.getElementById('titulo-pagina');
         if (tituloPagina) {
             if (medioFiltro) tituloPagina.innerText = "Noticias de " + medioFiltro;
@@ -75,12 +166,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+// =========================================================
+// --- CARGA DE NOTICIAS DINÁMICAS (MARCA, F1, ETC) ---
+// =========================================================
 async function cargarNoticias(url, filtroMedio, filtroModalidad, contenedor) {
     try {
         const respuesta = await fetch(url);
         const texto = await respuesta.text();
-        
         const filas = texto.split("\n").slice(1); 
+
         contenedor.innerHTML = ''; 
 
         filas.forEach((filaRaw, index) => {
@@ -111,6 +205,9 @@ async function cargarNoticias(url, filtroMedio, filtroModalidad, contenedor) {
 
         if (contenedor.innerHTML === '') {
             contenedor.innerHTML = '<p style="text-align:center; width:100%;">No hay noticias disponibles con este filtro.</p>';
+        } else {
+            // Aplicamos paginación al finalizar de cargar
+            actualizarPaginacion(contenedor);
         }
     } catch (error) {
         console.error("Error:", error);
@@ -118,7 +215,7 @@ async function cargarNoticias(url, filtroMedio, filtroModalidad, contenedor) {
     }
 }
 
-// Mostrar más fotos en la página En Papel
+// Botón de Cargar Más estático (para papel.html si lo hay)
 document.addEventListener('DOMContentLoaded', () => {
     const botonMas = document.getElementById('boton-cargar-mas');
     const fotosOcultas = document.querySelectorAll('.oculta');
@@ -137,9 +234,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // =========================================================
 
 document.addEventListener('DOMContentLoaded', () => {
-    
     const contenedorOpiniones = document.getElementById('contenedor-opiniones');
-
     if (contenedorOpiniones) {
         const sheetURL = contenedorOpiniones.getAttribute('data-sheet');
         if (sheetURL && !sheetURL.includes("PEGA_AQUI")) {
@@ -150,13 +245,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function parsearCSV(str) {
-        const arr = [];
-        let quote = false;
-        let row = 0, col = 0;
+        const arr = []; let quote = false; let row = 0, col = 0;
         for (let c = 0; c < str.length; c++) {
             let cc = str[c], nc = str[c+1];
-            arr[row] = arr[row] || [];
-            arr[row][col] = arr[row][col] || '';
+            arr[row] = arr[row] || []; arr[row][col] = arr[row][col] || '';
             if (cc == '"' && quote && nc == '"') { arr[row][col] += cc; ++c; continue; }
             if (cc == '"') { quote = !quote; continue; }
             if (cc == ',' && !quote) { ++col; continue; }
@@ -190,7 +282,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 tarjeta.setAttribute('data-titulo', titulo);
                 tarjeta.setAttribute('data-indice', index);
                 
-                // --- PREPARATIVOS PARA COMPARTIR ---
                 const urlCompartir = encodeURIComponent(window.location.href);
                 const tituloCompartir = encodeURIComponent(titulo);
                 let compartidos = localStorage.getItem('shares_opinion_' + index) || 0;
@@ -200,7 +291,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         <span class="opinion-fecha-corta">${fecha}</span>
                         <h3 class="opinion-titulo-corto">${titulo}</h3>
                     </div>
-
                     <div class="opinion-vista-larga">
                         <h1 class="opinion-titulo-largo">${titulo}</h1>
                         <span class="opinion-fecha-larga">${fecha}</span>
@@ -213,18 +303,16 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <a href="https://api.whatsapp.com/send?text=${tituloCompartir} - ${urlCompartir}" target="_blank" class="btn-share-social" style="color: #25D366; font-size: 1.6rem; transition: transform 0.2s;"><i class="fab fa-whatsapp"></i></a>
                                 <a href="https://twitter.com/intent/tweet?text=${tituloCompartir}&url=${urlCompartir}" target="_blank" class="btn-share-social icono-x" style="font-size: 1.6rem; transition: transform 0.2s;"><i class="fa-brands fa-x-twitter"></i></a>
                                 <a href="https://www.linkedin.com/sharing/share-offsite/?url=${urlCompartir}" target="_blank" class="btn-share-social" style="color: #0A66C2; font-size: 1.6rem; transition: transform 0.2s;"><i class="fab fa-linkedin"></i></a>
-                                <button class="btn-share-social btn-copy-link" style="background: none; border: none; color: #888; font-size: 1.6rem; cursor: pointer; padding: 0; transition: transform 0.2s;" title="Copiar enlace"><i class="fas fa-link"></i></button>
+                                <button class="btn-share-social btn-copy-link" style="background: none; border: none; color: #888; font-size: 1.6rem; cursor: pointer; padding: 0; transition: transform 0.2s;" title="Copiar enlace al portapapeles"><i class="fas fa-link"></i></button>
                             </div>
                             <div style="font-size: 0.9rem; color: #888; font-weight: bold; background: #f5f5f5; padding: 5px 12px; border-radius: 15px;" class="fondo-contador">
                                 <i class="fas fa-share-nodes"></i> <span class="share-counter-num">${compartidos}</span> compartidos
                             </div>
                         </div>
-                        
                         <button class="btn-cerrar-articulo" style="margin-top: 30px;">Cerrar Artículo</button>
                     </div>
                 `;
 
-                // Sumar compartidos
                 const botonesShare = tarjeta.querySelectorAll('.btn-share-social');
                 const contadorNum = tarjeta.querySelector('.share-counter-num');
                 const btnCopy = tarjeta.querySelector('.btn-copy-link');
@@ -238,7 +326,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                 });
 
-                // Copiar enlace
                 if (btnCopy) {
                     btnCopy.addEventListener('click', (e) => {
                         e.preventDefault();
@@ -248,7 +335,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                 }
 
-                // Abrir/Cerrar
                 const vistaCorta = tarjeta.querySelector('.opinion-vista-corta');
                 const btnCerrar = tarjeta.querySelector('.btn-cerrar-articulo');
 
@@ -267,7 +353,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 contenedor.appendChild(tarjeta);
             });
 
-            if (contenedor.innerHTML === '') contenedor.innerHTML = '<p class="mensaje-carga">No hay opiniones publicadas todavía.</p>';
+            if (contenedor.innerHTML === '') {
+                contenedor.innerHTML = '<p class="mensaje-carga">No hay opiniones publicadas todavía.</p>';
+            } else {
+                // Aplicamos paginación al finalizar de cargar
+                actualizarPaginacion(contenedor);
+            }
+
         } catch (error) {
             console.error("Error cargando opiniones:", error);
             contenedor.innerHTML = "<p class='mensaje-carga'>Error cargando las columnas de opinión.</p>";
@@ -384,8 +476,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const titulo = col[1] ? col[1].trim() : 'Sin título';
                 const foto = col[3] ? col[3].trim() : '';
                 
-                // NOTA: Sin loading="lazy" para que carguen siempre en la portada. 
-                // Añadido onerror para que no se rompa la imagen si falla el link.
                 const tarjeta = `
                     <a href="opinion.html" class="news-item">
                         <img src="${foto}" alt="${titulo}" onerror="this.onerror=null; this.src='img/logo.jpeg';">
@@ -450,7 +540,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const titulo = col[2] ? col[2] : 'Sin título';
                 const foto = col[3] ? col[3] : '';
                 
-                // NOTA: Sin loading="lazy" y con onerror de seguridad
                 const tarjeta = `
                     <a href="${enlace}" target="_blank" class="news-item">
                         <img src="${foto}" alt="${titulo}" onerror="this.onerror=null; this.src='img/logo.jpeg';">
@@ -469,10 +558,11 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // =========================================================
-// --- LÓGICA UNIVERSAL DE ORDENACIÓN DE TARJETAS ---
+// --- LÓGICA UNIVERSAL DE ORDENACIÓN Y BÚSQUEDA ---
 // =========================================================
 
 document.addEventListener('DOMContentLoaded', () => {
+    // ---- ORDENACIÓN ----
     const selectOrden = document.getElementById('ordenar-noticias');
     const contenedorGrid = document.querySelector('.opiniones-grid, .grid-tarjetas');
 
@@ -486,8 +576,8 @@ document.addEventListener('DOMContentLoaded', () => {
             tarjetas.sort((a, b) => {
                 if (modo === 'original') return parseInt(a.getAttribute('data-indice')) - parseInt(b.getAttribute('data-indice'));
                 if (modo === 'fecha-desc' || modo === 'fecha-asc') {
-                    const fechaA = convertirFechaParaOrdenar(a.getAttribute('data-fecha'));
-                    const fechaB = convertirFechaParaOrdenar(b.getAttribute('data-fecha'));
+                    const fechaA = convertirFechaParaOrdenarGlobal(a.getAttribute('data-fecha'));
+                    const fechaB = convertirFechaParaOrdenarGlobal(b.getAttribute('data-fecha'));
                     return modo === 'fecha-desc' ? fechaB - fechaA : fechaA - fechaB;
                 }
                 if (modo === 'az' || modo === 'za') {
@@ -501,14 +591,42 @@ document.addEventListener('DOMContentLoaded', () => {
 
             contenedorGrid.innerHTML = '';
             tarjetas.forEach(t => contenedorGrid.appendChild(t));
+
+            // Al ordenar, volvemos a la página 1 y recalculamos
+            contenedorGrid.setAttribute('data-pagina', 1);
+            actualizarPaginacion(contenedorGrid);
         });
     }
 
-    function convertirFechaParaOrdenar(fechaStr) {
+    function convertirFechaParaOrdenarGlobal(fechaStr) {
         if (!fechaStr) return 0;
         const partes = fechaStr.split('/');
         if (partes.length === 3) return new Date(partes[2], partes[1] - 1, partes[0]).getTime();
         return new Date(fechaStr).getTime() || 0;
+    }
+
+    // ---- BÚSQUEDA EN TIEMPO REAL ----
+    const buscador = document.getElementById('buscador-noticias');
+
+    if (buscador && contenedorGrid) {
+        buscador.addEventListener('input', (e) => {
+            const termino = e.target.value.toLowerCase();
+            const tarjetas = Array.from(contenedorGrid.children).filter(t => t.hasAttribute('data-titulo'));
+
+            tarjetas.forEach(tarjeta => {
+                const titulo = tarjeta.getAttribute('data-titulo').toLowerCase();
+                // En vez de style.display, usamos nuestra nueva clase de búsqueda
+                if (titulo.includes(termino)) {
+                    tarjeta.classList.remove('oculto-busqueda');
+                } else {
+                    tarjeta.classList.add('oculto-busqueda');
+                }
+            });
+
+            // Al buscar, volvemos a la página 1 y recalculamos la paginación
+            contenedorGrid.setAttribute('data-pagina', 1);
+            actualizarPaginacion(contenedorGrid);
+        });
     }
 });
 
@@ -539,31 +657,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 localStorage.setItem('modoPreferido', 'claro');
                 btnTema.innerHTML = '<i class="fas fa-moon"></i> Modo Oscuro';
             }
-        });
-    }
-});
-
-// =========================================================
-// --- LÓGICA DEL BUSCADOR EN TIEMPO REAL ---
-// =========================================================
-
-document.addEventListener('DOMContentLoaded', () => {
-    const buscador = document.getElementById('buscador-noticias');
-    const contenedorGrid = document.querySelector('.opiniones-grid, .grid-tarjetas');
-
-    if (buscador && contenedorGrid) {
-        buscador.addEventListener('input', (e) => {
-            const termino = e.target.value.toLowerCase();
-            const tarjetas = Array.from(contenedorGrid.children).filter(t => t.hasAttribute('data-titulo'));
-
-            tarjetas.forEach(tarjeta => {
-                const titulo = tarjeta.getAttribute('data-titulo').toLowerCase();
-                if (titulo.includes(termino)) {
-                    tarjeta.style.display = '';
-                } else {
-                    tarjeta.style.display = 'none';
-                }
-            });
         });
     }
 });
