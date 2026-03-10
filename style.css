@@ -444,7 +444,7 @@ footer {
 }
 
 .quote-item blockquote {
-    font-family: 'Times New Roman', serif;
+    font-family:  'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size: 1.5rem;
     font-style: italic;
     color: #111;
@@ -485,7 +485,7 @@ footer {
     align-items: flex-start;
     gap: 10px;
     margin-bottom: 3rem;
-    font-family: 'Times New Roman', Times, serif;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 .papel-tag-1 {
@@ -542,7 +542,7 @@ footer {
     color: #fff;
     padding: 10px 25px;
     font-size: 1.3rem;
-    font-family: 'Times New Roman', Times, serif;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     text-decoration: none;
     transition: background-color 0.3s ease;
 }
@@ -643,7 +643,7 @@ footer {
     color: #fff;
     padding: 10px 30px;
     font-size: 1.3rem;
-    font-family: 'Times New Roman', Times, serif;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     transition: background-color 0.3s ease;
 }
 
@@ -742,7 +742,7 @@ footer {
     color: #fff;
     padding: 10px 30px;
     font-size: 1.3rem;
-    font-family: 'Times New Roman', Times, serif;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     transition: background-color 0.3s ease;
 }
 
@@ -919,7 +919,7 @@ footer {
     padding: 12px 30px;
     font-size: 1.1rem;
     cursor: pointer;
-    font-family: 'Times New Roman', Times, serif;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     transition: 0.3s;
 }
 
@@ -1053,7 +1053,7 @@ footer {
     color: white;
     border: 1px solid #333;
     border-radius: 4px;
-    font-family: 'Times New Roman', Times, serif;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     cursor: pointer;
     transition: border-color 0.3s ease;
 }
@@ -1344,3 +1344,4 @@ body.dark-mode .nav-dropdown::-webkit-scrollbar-thumb {
 .oculto-por-buscador {
     display: none !important;
 }
+
