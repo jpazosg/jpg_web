@@ -127,6 +127,9 @@ async function cargarNoticias(url, filtroMedio, filtroModalidad, contenedor) {
 
         if (contenedor.innerHTML === '') {
             contenedor.innerHTML = '<p style="text-align:center; width:100%;">No hay noticias disponibles con este filtro.</p>';
+        } else {
+            // NUEVO: Iniciar paginación al terminar de cargar
+            if (window.iniciarPaginacion) window.iniciarPaginacion();
         }
 
     } catch (error) {
@@ -268,7 +271,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // --- Lógica del Contador y de Copiar Enlace ---
                 const botonesShare = tarjeta.querySelectorAll('.btn-share-social');
-                const contadorNum = tarjeta.querySelector('.share-counter-num');
                 const btnCopy = tarjeta.querySelector('.btn-copy-link');
 
                 // Sumar al contador al hacer clic en cualquier red social
@@ -277,7 +279,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         let actual = parseInt(localStorage.getItem('shares_opinion_' + index) || 0);
                         actual++;
                         localStorage.setItem('shares_opinion_' + index, actual);
-                        contadorNum.innerText = actual;
                     });
                 });
 
@@ -314,6 +315,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (contenedor.innerHTML === '') {
                 contenedor.innerHTML = '<p class="mensaje-carga">No hay opiniones publicadas todavía.</p>';
+            } else {
+                // NUEVO: Iniciar paginación al terminar de cargar
+                if (window.iniciarPaginacion) window.iniciarPaginacion();
             }
 
         } catch (error) {
@@ -641,6 +645,9 @@ document.addEventListener('DOMContentLoaded', () => {
             // Vaciamos el contenedor y metemos las tarjetas ya ordenadas
             contenedorGrid.innerHTML = '';
             tarjetas.forEach(t => contenedorGrid.appendChild(t));
+
+            // NUEVO: Tras ordenar, reseteamos la paginación a la página 1
+            if (window.iniciarPaginacion) window.iniciarPaginacion();
         });
     }
 
@@ -711,13 +718,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
             tarjetas.forEach(tarjeta => {
                 const titulo = tarjeta.getAttribute('data-titulo').toLowerCase();
-                // Si el título incluye lo que hemos escrito, se muestra. Si no, se oculta.
+                // NUEVO: En lugar de usar style.display = 'none', usamos una clase para que la paginación lo sepa
                 if (titulo.includes(termino)) {
-                    tarjeta.style.display = '';
+                    tarjeta.classList.remove('oculto-por-buscador');
                 } else {
-                    tarjeta.style.display = 'none';
+                    tarjeta.classList.add('oculto-por-buscador');
                 }
             });
+
+            // NUEVO: Avisamos a la paginación para que se recalcule con las tarjetas visibles
+            if (window.iniciarPaginacion) window.iniciarPaginacion();
         });
     }
 });
@@ -748,3 +758,95 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+// =========================================================
+// --- 9. LÓGICA DE PAGINACIÓN DOM (LA NUEVA FUNCIONALIDAD) ---
+// =========================================================
+window.paginaActualDOM = 1;
+window.itemsPorPaginaDOM = 12;
+
+window.iniciarPaginacion = function() {
+    window.paginaActualDOM = 1;
+    actualizarPaginacionDOM();
+};
+
+function actualizarPaginacionDOM() {
+    const contenedorGrid = document.querySelector('.opiniones-grid, .grid-tarjetas');
+    if (!contenedorGrid) return;
+
+    // Seleccionamos solo las tarjetas reales, saltándonos el mensaje de "Cargando"
+    const tarjetas = Array.from(contenedorGrid.children).filter(t => t.hasAttribute('data-indice'));
+    
+    // Dejamos fuera de la matemática las tarjetas que el buscador ya ha escondido
+    const tarjetasActivas = tarjetas.filter(t => !t.classList.contains('oculto-por-buscador'));
+
+    const inicio = (window.paginaActualDOM - 1) * window.itemsPorPaginaDOM;
+    const fin = inicio + window.itemsPorPaginaDOM;
+
+    tarjetas.forEach(t => {
+        if (t.classList.contains('oculto-por-buscador')) {
+            t.style.display = 'none'; // El buscador manda, si está oculta, se queda oculta.
+        } else {
+            const indexActivo = tarjetasActivas.indexOf(t);
+            if (indexActivo >= inicio && indexActivo < fin) {
+                t.style.display = ''; // Mostramos las 12 correspondientes a la página actual
+            } else {
+                t.style.display = 'none'; // Escondemos el resto
+            }
+        }
+    });
+
+    dibujarControlesPaginacionDOM(tarjetasActivas.length, contenedorGrid);
+}
+
+function dibujarControlesPaginacionDOM(totalItems, grid) {
+    let contenedorPag = document.getElementById('paginacion-controles');
+    
+    // Si la página HTML no tiene el div, lo inyectamos automáticamente
+    if (!contenedorPag) {
+        contenedorPag = document.createElement('div');
+        contenedorPag.id = 'paginacion-controles';
+        contenedorPag.className = 'paginacion-contenedor';
+        grid.parentNode.insertBefore(contenedorPag, grid.nextSibling);
+    }
+
+    contenedorPag.innerHTML = '';
+    const totalPaginas = Math.ceil(totalItems / window.itemsPorPaginaDOM);
+    
+    if (totalPaginas <= 1) return; // Si hay 12 o menos, ni siquiera dibujamos los botones
+
+    // Botón Anterior
+    const btnAnterior = document.createElement('button');
+    btnAnterior.innerHTML = '&laquo; Anterior';
+    btnAnterior.disabled = window.paginaActualDOM === 1;
+    btnAnterior.onclick = () => { 
+        window.paginaActualDOM--; 
+        actualizarPaginacionDOM(); 
+        window.scrollTo({ top: grid.offsetTop - 120, behavior: 'smooth' }); 
+    };
+    contenedorPag.appendChild(btnAnterior);
+
+    // Botones Numéricos
+    for (let i = 1; i <= totalPaginas; i++) {
+        const btnNum = document.createElement('button');
+        btnNum.textContent = i;
+        if (i === window.paginaActualDOM) btnNum.classList.add('activo');
+        btnNum.onclick = () => { 
+            window.paginaActualDOM = i; 
+            actualizarPaginacionDOM(); 
+            window.scrollTo({ top: grid.offsetTop - 120, behavior: 'smooth' }); 
+        };
+        contenedorPag.appendChild(btnNum);
+    }
+
+    // Botón Siguiente
+    const btnSiguiente = document.createElement('button');
+    btnSiguiente.innerHTML = 'Siguiente &raquo;';
+    btnSiguiente.disabled = window.paginaActualDOM === totalPaginas;
+    btnSiguiente.onclick = () => { 
+        window.paginaActualDOM++; 
+        actualizarPaginacionDOM(); 
+        window.scrollTo({ top: grid.offsetTop - 120, behavior: 'smooth' }); 
+    };
+    contenedorPag.appendChild(btnSiguiente);
+}
