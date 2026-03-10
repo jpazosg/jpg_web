@@ -1298,3 +1298,49 @@ body.dark-mode .nav-dropdown::-webkit-scrollbar-thumb {
     cursor: grabbing;
     transition: none !important; /* Quita el retardo al arrastrar para que sea fluido */
 }
+
+/* =========================================================
+   --- ESTILOS PAGINACIÓN DINÁMICA --- 
+   ========================================================= */
+.paginacion-contenedor {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 40px;
+    width: 100%;
+    flex-wrap: wrap; /* En móviles baja de línea si no caben */
+}
+
+.paginacion-contenedor button {
+    background-color: #111;
+    color: white;
+    border: 1px solid #333;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.paginacion-contenedor button:hover:not(:disabled) {
+    background-color: #ff0000;
+    border-color: #ff0000;
+}
+
+.paginacion-contenedor button.activo {
+    background-color: #ff0000;
+    border-color: #ff0000;
+    pointer-events: none; /* No se puede clicar la página en la que ya estás */
+}
+
+.paginacion-contenedor button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Esencial para que el buscador pueda "comunicarse" con la paginación */
+.oculto-por-buscador {
+    display: none !important;
+}
